@@ -2,6 +2,7 @@ from functools import reduce
 from operator import mul
 from typing import Iterable, Sequence, Tuple
 
+NEW_YEAR = 2020
 
 def product(*args: int) -> int:
     return reduce(mul, args, 1)
@@ -11,7 +12,7 @@ def find_three_entries_with_sum_2020(entries: Sequence[int]) -> Tuple[int, int, 
     entries = list(sorted(entries))
 
     for f in range(len(entries) - 2):
-        needed_sum = 2020 - entries[f]
+        needed_sum = NEW_YEAR - entries[f]
         if needed_sum <= 0:
             continue
 
@@ -32,7 +33,7 @@ def find_three_entries_with_sum_2020(entries: Sequence[int]) -> Tuple[int, int, 
 def find_two_entries_with_sum_2020(entries: Iterable[int]) -> Tuple[int, int]:
     seen = set()
     for entry in entries:
-        candidate = 2020 - entry
+        candidate = NEW_YEAR - entry
         if candidate in seen:
             return entry, candidate
         seen.add(entry)
@@ -59,9 +60,9 @@ def run_tasks() -> None:
     with open("report.txt") as report_file:
         report_entries = [int(l) for l in report_file]
         print(
-            f"Product of two entries with sum 2020: {first_task(report_entries)}")
+            f"Day 1-1: {first_task(report_entries)}")
         print(
-            f"Product of three entries with sum 2020: {second_task(report_entries)}")
+            f"Day 1-2: {second_task(report_entries)}")
 
 
 def main() -> None:
