@@ -49,19 +49,37 @@ fn find_product_of_two_numbers_equal_to_2020(entities: &Vec<i32>) -> i32 {
     return 0;
 }
 
-fn main() {
-    let other = fs::read_to_string("input/day-1.input").unwrap();
-    let content: Vec<i32> = other
+fn task_tests() {
+    let test_entries = vec![1721, 979, 366, 299, 675, 1456];
+
+    assert_eq!(
+        find_product_of_two_numbers_equal_to_2020(&test_entries),
+        514579
+    );
+    assert_eq!(
+        find_product_of_three_numbers_equal_to_2020(&test_entries),
+        241861950
+    );
+}
+
+fn run_tasks() {
+    let entities: Vec<i32> = fs::read_to_string("input/day-1.input")
+        .unwrap()
         .split_whitespace()
         .map(|s| s.parse().unwrap())
         .collect();
 
     println!(
         "Day 1-1: {}",
-        find_product_of_two_numbers_equal_to_2020(&content)
+        find_product_of_two_numbers_equal_to_2020(&entities)
     );
     println!(
         "Day 1-2: {}",
-        find_product_of_three_numbers_equal_to_2020(&content)
+        find_product_of_three_numbers_equal_to_2020(&entities)
     );
+}
+
+fn main() {
+    task_tests();
+    run_tasks();
 }
