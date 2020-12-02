@@ -57,7 +57,7 @@ fn run_tasks() {
     let passwords_file_content =
         fs::read_to_string("input/day-2.input").expect("Missing passwords file");
 
-    let passwords_list: Vec<&str> = passwords_file_content.split('\n').collect();
+    let passwords_list: Vec<&str> = passwords_file_content.lines().collect();
 
     println!("Day 2-1: {}", count_old_valid_passwords(&passwords_list));
     println!(

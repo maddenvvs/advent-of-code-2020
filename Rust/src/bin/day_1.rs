@@ -65,7 +65,7 @@ fn task_tests() {
 fn run_tasks() {
     let entities: Vec<i32> = fs::read_to_string("input/day-1.input")
         .unwrap()
-        .split_whitespace()
+        .lines()
         .map(|s| s.parse().unwrap())
         .collect();
 
