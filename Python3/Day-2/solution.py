@@ -36,7 +36,7 @@ def count_current_valid_passwords(passwords: Iterable[str]) -> int:
     return sum(is_password_valid(password, current_policy) for password in passwords)
 
 
-def task_tests() -> None:
+def test_tasks() -> None:
     test_passwords = [
         "1-3 a: abcde",
         "1-3 b: cdefg",
@@ -56,7 +56,7 @@ def run_tasks() -> None:
 
 
 def main() -> None:
-    task_tests()
+    test_tasks()
     run_tasks()
 
 

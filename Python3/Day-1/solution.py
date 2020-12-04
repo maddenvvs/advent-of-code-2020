@@ -4,6 +4,7 @@ from typing import Iterable, Sequence, Tuple
 
 NEW_YEAR = 2020
 
+
 def product(*args: int) -> int:
     return reduce(mul, args, 1)
 
@@ -49,7 +50,7 @@ def second_task(entries: Sequence[int]) -> int:
     return product(*find_three_entries_with_sum_2020(entries))
 
 
-def task_tests() -> None:
+def test_tasks() -> None:
     test_entries = [1721, 979, 366, 299, 675, 1456]
 
     assert first_task(test_entries) == 514579
@@ -66,7 +67,7 @@ def run_tasks() -> None:
 
 
 def main() -> None:
-    task_tests()
+    test_tasks()
     run_tasks()
 
 

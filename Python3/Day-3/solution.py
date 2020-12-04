@@ -30,7 +30,7 @@ def find_product_of_trees_on_slopes(_map: Sequence[str], slopes: Iterable[Slope]
     return product(*(count_trees_on_slope(_map, slope) for slope in slopes))
 
 
-def tesk_tests(slopes: Sequence[Slope]) -> None:
+def test_tasks(slopes: Sequence[Slope]) -> None:
     test_map = ["..##.......",
                 "#...#...#..",
                 ".#....#..#.",
@@ -59,7 +59,7 @@ def run_tasks(slopes: Sequence[Slope]) -> None:
 def main() -> None:
     slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 
-    tesk_tests(slopes)
+    test_tasks(slopes)
     run_tasks(slopes)
 
 
