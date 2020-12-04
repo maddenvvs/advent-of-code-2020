@@ -1,52 +1,52 @@
+#![warn(clippy::all)]
+
 use std::collections::HashMap;
 use std::fs;
 
 fn is_number(num: &str, length: usize) -> bool {
-    return num.len() == length && num.chars().all(|ch| ch.is_ascii_digit());
+    num.len() == length && num.chars().all(|ch| ch.is_ascii_digit())
 }
 
 fn is_number_between(num: &str, length: usize, from: i32, to: i32) -> bool {
-    return is_number(num, length) && {
+    is_number(num, length) && {
         let number: i32 = num.parse().unwrap();
-        return from <= number && number <= to;
-    };
+
+        from <= number && number <= to
+    }
 }
 
 fn is_year_between(num: &str, from: i32, to: i32) -> bool {
-    return is_number_between(num, 4, from, to);
+    is_number_between(num, 4, from, to)
 }
 
 fn is_height_valid(value: &str) -> bool {
-    return match &value[value.len() - 2..] {
+    match &value[value.len() - 2..] {
         "cm" => is_number_between(&value[..value.len() - 2], 3, 150, 193),
         "in" => is_number_between(&value[..value.len() - 2], 2, 59, 76),
         _ => false,
-    };
+    }
 }
 
 fn is_hair_color_valid(value: &str) -> bool {
     return value.len() == 7
-        && value.chars().nth(0).unwrap() == '#'
+        && value.starts_with('#')
         && value.chars().skip(1).all(|ch| ch.is_digit(16));
 }
 
 fn is_eye_color_valid(value: &str) -> bool {
-    return match value {
-        "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
-        _ => false,
-    };
+    matches!(value, "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth")
 }
 
 fn is_pid_valid(value: &str) -> bool {
-    return is_number(value, 9);
+    is_number(value, 9)
 }
 
 fn is_passport_valid_weak(passport: &HashMap<&str, &str>) -> bool {
-    return passport.len() == 8 || (passport.len() == 7 && !passport.contains_key("cid"));
+    passport.len() == 8 || (passport.len() == 7 && !passport.contains_key("cid"))
 }
 
 fn is_field_valid(name: &str, value: &str) -> bool {
-    return match name {
+    match name {
         "byr" => is_year_between(value, 1920, 2002),
         "iyr" => is_year_between(value, 2010, 2020),
         "eyr" => is_year_between(value, 2020, 2030),
@@ -56,7 +56,7 @@ fn is_field_valid(name: &str, value: &str) -> bool {
         "pid" => is_pid_valid(value),
         "cid" => true,
         _ => false,
-    };
+    }
 }
 
 fn is_passport_valid_strong(passport: &HashMap<&str, &str>) -> bool {
@@ -77,15 +77,15 @@ fn parse_password(password_entity: &str) -> HashMap<&str, &str> {
         passport.insert(parts[0], parts[1]);
     }
 
-    return passport;
+    passport
 }
 
-fn parse_passwords(passwords_text: &String) -> Vec<HashMap<&str, &str>> {
+fn parse_passwords(passwords_text: &str) -> Vec<HashMap<&str, &str>> {
     return passwords_text.split("\n\n").map(&parse_password).collect();
 }
 
 fn count_valid_passwords(
-    passwords_text: &String,
+    passwords_text: &str,
     password_policy: &dyn Fn(&HashMap<&str, &str>) -> bool,
 ) -> i32 {
     return parse_passwords(passwords_text)
@@ -94,12 +94,12 @@ fn count_valid_passwords(
         .count() as i32;
 }
 
-fn count_passwords_with_weak_validation(passwords_text: &String) -> i32 {
-    return count_valid_passwords(passwords_text, &is_passport_valid_weak);
+fn count_passwords_with_weak_validation(passwords_text: &str) -> i32 {
+    count_valid_passwords(passwords_text, &is_passport_valid_weak)
 }
 
-fn count_passwords_with_strong_validation(passwords_text: &String) -> i32 {
-    return count_valid_passwords(passwords_text, &is_passport_valid_strong);
+fn count_passwords_with_strong_validation(passwords_text: &str) -> i32 {
+    count_valid_passwords(passwords_text, &is_passport_valid_strong)
 }
 
 fn test_tasks() {

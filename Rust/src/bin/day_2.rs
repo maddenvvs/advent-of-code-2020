@@ -1,7 +1,8 @@
-use std::fs;
+#![warn(clippy::all)]
 
 use lazy_static::lazy_static;
 use regex::Regex;
+use std::fs;
 
 lazy_static! {
     static ref PASSWORD_PATTERN: Regex = Regex::new(r"^(\d+)-(\d+) (\w): (\w+)$").unwrap();
@@ -15,7 +16,7 @@ fn current_policy(first_number: i32, second_number: i32, letter: char, password:
 fn old_policy(first_number: i32, second_number: i32, letter: char, password: &str) -> bool {
     let occurences_of_letter = password.chars().filter(|&ch| ch == letter).count() as i32;
 
-    return first_number <= occurences_of_letter && occurences_of_letter <= second_number;
+    first_number <= occurences_of_letter && occurences_of_letter <= second_number
 }
 
 fn is_password_valid(
@@ -26,20 +27,20 @@ fn is_password_valid(
 
     let first_number: i32 = captures.get(1).unwrap().as_str().parse().unwrap();
     let second_number: i32 = captures.get(2).unwrap().as_str().parse().unwrap();
-    let letter: char = captures.get(3).unwrap().as_str().chars().nth(0).unwrap();
+    let letter: char = captures.get(3).unwrap().as_str().chars().next().unwrap();
     let password_text: &str = captures.get(4).unwrap().as_str();
 
-    return password_policy(first_number, second_number, letter, password_text);
+    password_policy(first_number, second_number, letter, password_text)
 }
 
-fn count_old_valid_passwords(passwords: &Vec<&str>) -> i32 {
+fn count_old_valid_passwords(passwords: &[&str]) -> i32 {
     return passwords
         .iter()
         .filter(|password| is_password_valid(password, &old_policy))
         .count() as i32;
 }
 
-fn count_current_valid_passwords(passwords: &Vec<&str>) -> i32 {
+fn count_current_valid_passwords(passwords: &[&str]) -> i32 {
     return passwords
         .iter()
         .filter(|password| is_password_valid(password, &current_policy))

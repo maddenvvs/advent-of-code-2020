@@ -1,11 +1,13 @@
+#![warn(clippy::all)]
+
 use std::collections::HashSet;
 use std::fs;
 
 const NEW_YEAR: i32 = 2020;
 
-fn find_product_of_three_numbers_equal_to_2020(entities: &Vec<i32>) -> i32 {
+fn find_product_of_three_numbers_equal_to_2020(entities: &[i32]) -> i32 {
     let mut entities_copy = entities.to_vec();
-    entities_copy.sort();
+    entities_copy.sort_unstable();
 
     for f in 0..(entities.len() - 2) {
         let target_sum = NEW_YEAR - entities_copy[f];
@@ -31,10 +33,10 @@ fn find_product_of_three_numbers_equal_to_2020(entities: &Vec<i32>) -> i32 {
         }
     }
 
-    return 0;
+    0
 }
 
-fn find_product_of_two_numbers_equal_to_2020(entities: &Vec<i32>) -> i32 {
+fn find_product_of_two_numbers_equal_to_2020(entities: &[i32]) -> i32 {
     let mut seen = HashSet::new();
 
     for entity in entities {
@@ -46,7 +48,7 @@ fn find_product_of_two_numbers_equal_to_2020(entities: &Vec<i32>) -> i32 {
         seen.insert(entity);
     }
 
-    return 0;
+    0
 }
 
 fn task_tests() {
