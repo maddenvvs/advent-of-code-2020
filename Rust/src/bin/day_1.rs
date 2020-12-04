@@ -52,7 +52,7 @@ fn find_product_of_two_numbers_equal_to_2020(entities: &[i32]) -> i32 {
 }
 
 fn task_tests() {
-    let test_entries = vec![1721, 979, 366, 299, 675, 1456];
+    let test_entries = [1721, 979, 366, 299, 675, 1456];
 
     assert_eq!(
         find_product_of_two_numbers_equal_to_2020(&test_entries),

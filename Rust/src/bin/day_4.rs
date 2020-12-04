@@ -28,9 +28,7 @@ fn is_height_valid(value: &str) -> bool {
 }
 
 fn is_hair_color_valid(value: &str) -> bool {
-    return value.len() == 7
-        && value.starts_with('#')
-        && value.chars().skip(1).all(|ch| ch.is_digit(16));
+    value.len() == 7 && value.starts_with('#') && value.chars().skip(1).all(|ch| ch.is_digit(16))
 }
 
 fn is_eye_color_valid(value: &str) -> bool {
@@ -60,38 +58,32 @@ fn is_field_valid(name: &str, value: &str) -> bool {
 }
 
 fn is_passport_valid_strong(passport: &HashMap<&str, &str>) -> bool {
-    if !is_passport_valid_weak(passport) {
-        return false;
-    }
-
-    return passport
-        .iter()
-        .all(|(name, value)| is_field_valid(name, value));
+    is_passport_valid_weak(passport)
+        && passport
+            .iter()
+            .all(|(name, value)| is_field_valid(name, value))
 }
 
 fn parse_password(password_entity: &str) -> HashMap<&str, &str> {
-    let mut passport = HashMap::new();
-
-    for field in password_entity.split_whitespace() {
-        let parts: Vec<&str> = field.trim().splitn(2, ':').collect();
-        passport.insert(parts[0], parts[1]);
-    }
-
-    passport
+    password_entity
+        .split_whitespace()
+        .map(|e| e.trim().splitn(2, ':').collect::<Vec<&str>>())
+        .map(|pair| (pair[0], pair[1]))
+        .collect()
 }
 
 fn parse_passwords(passwords_text: &str) -> Vec<HashMap<&str, &str>> {
-    return passwords_text.split("\n\n").map(&parse_password).collect();
+    passwords_text.split("\n\n").map(&parse_password).collect()
 }
 
 fn count_valid_passwords(
     passwords_text: &str,
     password_policy: &dyn Fn(&HashMap<&str, &str>) -> bool,
 ) -> i32 {
-    return parse_passwords(passwords_text)
+    parse_passwords(passwords_text)
         .iter()
         .filter(|p| password_policy(p))
-        .count() as i32;
+        .count() as i32
 }
 
 fn count_passwords_with_weak_validation(passwords_text: &str) -> i32 {

@@ -75,7 +75,7 @@ fn count_current_valid_passwords(passwords: &[&str]) -> i32 {
 }
 
 fn task_tests() {
-    let test_passwords = vec!["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
+    let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
     assert_eq!(count_old_valid_passwords(&test_passwords), 2);
     assert_eq!(count_current_valid_passwords(&test_passwords), 1);
