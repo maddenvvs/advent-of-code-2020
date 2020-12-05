@@ -5,7 +5,7 @@ use std::fs;
 
 const NEW_YEAR: i32 = 2020;
 
-fn find_product_of_three_numbers_equal_to_2020(entities: &[i32]) -> i32 {
+fn find_product_of_three_numbers_equal_to_2020(entities: &[i32]) -> Option<i32> {
     let mut entities_copy = entities.to_vec();
     entities_copy.sort_unstable();
 
@@ -22,7 +22,7 @@ fn find_product_of_three_numbers_equal_to_2020(entities: &[i32]) -> i32 {
             let temp_sum = entities_copy[l] + entities_copy[r];
 
             if temp_sum == target_sum {
-                return entities_copy[f] * entities_copy[l] * entities_copy[r];
+                return Some(entities_copy[f] * entities_copy[l] * entities_copy[r]);
             }
 
             if temp_sum < target_sum {
@@ -32,23 +32,22 @@ fn find_product_of_three_numbers_equal_to_2020(entities: &[i32]) -> i32 {
             }
         }
     }
-
-    0
+    None
 }
 
-fn find_product_of_two_numbers_equal_to_2020(entities: &[i32]) -> i32 {
+fn find_product_of_two_numbers_equal_to_2020(entities: &[i32]) -> Option<i32> {
     let mut seen = HashSet::new();
 
     for entity in entities {
         let candidate = NEW_YEAR - entity;
         if seen.contains(&candidate) {
-            return candidate * entity;
+            return Some(candidate * entity);
         }
 
         seen.insert(entity);
     }
 
-    0
+    None
 }
 
 fn task_tests() {
@@ -56,11 +55,11 @@ fn task_tests() {
 
     assert_eq!(
         find_product_of_two_numbers_equal_to_2020(&test_entries),
-        514579
+        Some(514579)
     );
     assert_eq!(
         find_product_of_three_numbers_equal_to_2020(&test_entries),
-        241861950
+        Some(241861950)
     );
 }
 
@@ -71,14 +70,15 @@ fn run_tasks() {
         .map(|s| s.parse().unwrap())
         .collect();
 
-    println!(
-        "Day 1-1: {}",
-        find_product_of_two_numbers_equal_to_2020(&entities)
-    );
-    println!(
-        "Day 1-2: {}",
-        find_product_of_three_numbers_equal_to_2020(&entities)
-    );
+    match find_product_of_two_numbers_equal_to_2020(&entities) {
+        Some(p) => println!("Day 1-1: {}", p),
+        None => println!("Two numbers were not found!"),
+    }
+
+    match find_product_of_three_numbers_equal_to_2020(&entities) {
+        Some(p) => println!("Day 1-2: {}", p),
+        None => println!("Three numbers were not found!"),
+    }
 }
 
 fn main() {

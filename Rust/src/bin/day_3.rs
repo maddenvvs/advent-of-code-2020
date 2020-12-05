@@ -2,15 +2,15 @@
 
 use std::fs;
 
-struct Slope {
-    dx: i8,
-    dy: i8,
+struct Point {
+    x: i8,
+    y: i8,
 }
 
-fn count_trees_on_slope(map: &[&str], slope: &Slope) -> u32 {
+fn count_trees_on_slope(map: &[&str], slope: &Point) -> u32 {
     let height = map.len();
     let width = map[0].chars().count();
-    let (dc, dr) = (slope.dx as usize, slope.dy as usize);
+    let (dc, dr) = (slope.x as usize, slope.y as usize);
     let mut cr = 0;
     let mut cc = 0;
     let mut trees = 0;
@@ -27,17 +27,14 @@ fn count_trees_on_slope(map: &[&str], slope: &Slope) -> u32 {
     trees
 }
 
-fn find_product_of_trees_on_slopes(map: &[&str], slopes: &[Slope]) -> u32 {
-    let mut result = 1;
-
-    for slope in slopes {
-        result *= count_trees_on_slope(map, slope);
-    }
-
-    result
+fn find_product_of_trees_on_slopes(map: &[&str], slopes: &[Point]) -> u32 {
+    slopes
+        .iter()
+        .map(|s| count_trees_on_slope(map, s))
+        .product()
 }
 
-fn task_tests(slopes: &[Slope]) {
+fn task_tests(slopes: &[Point]) {
     let test_map = [
         "..##.......",
         "#...#...#..",
@@ -56,7 +53,7 @@ fn task_tests(slopes: &[Slope]) {
     assert_eq!(find_product_of_trees_on_slopes(&test_map, slopes), 336);
 }
 
-fn run_tasks(slopes: &[Slope]) {
+fn run_tasks(slopes: &[Point]) {
     let file_content = fs::read_to_string("input/day-3.input").expect("Missing area map file");
 
     let area_map: Vec<&str> = file_content.lines().collect();
@@ -70,11 +67,11 @@ fn run_tasks(slopes: &[Slope]) {
 
 fn main() {
     let slopes = [
-        Slope { dx: 1, dy: 1 },
-        Slope { dx: 3, dy: 1 },
-        Slope { dx: 5, dy: 1 },
-        Slope { dx: 7, dy: 1 },
-        Slope { dx: 1, dy: 2 },
+        Point { x: 1, y: 1 },
+        Point { x: 3, y: 1 },
+        Point { x: 5, y: 1 },
+        Point { x: 7, y: 1 },
+        Point { x: 1, y: 2 },
     ];
 
     task_tests(&slopes);

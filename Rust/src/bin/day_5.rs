@@ -28,23 +28,23 @@ impl Seat {
     }
 }
 
-fn find_max_seat_id(seats: &[Seat]) -> i32 {
-    seats.iter().map(|s| s.seat_id).max().unwrap()
+fn find_max_seat_id(seats: &[Seat]) -> Option<i32> {
+    seats.iter().map(|s| s.seat_id).max()
 }
 
-fn find_missing_seat_id(seats: &[Seat]) -> i32 {
+fn find_missing_seat_id(seats: &[Seat]) -> Option<i32> {
     let mut seat_ids: Vec<i32> = seats.iter().map(|s| s.seat_id).collect();
     seat_ids.sort_unstable();
 
     let mut last_value = -1;
     for val in seat_ids.iter() {
         if last_value != -1 && last_value + 2 == *val {
-            return last_value + 1;
+            return Some(last_value + 1);
         }
         last_value = *val;
     }
 
-    -1
+    None
 }
 
 fn test_tasks() {
@@ -70,8 +70,15 @@ fn run_tasks() {
         .map(Seat::from_seat_pass)
         .collect();
 
-    println!("Day 5-1: {}", find_max_seat_id(&available_seats));
-    println!("Day 5-2: {}", find_missing_seat_id(&available_seats));
+    match find_max_seat_id(&available_seats) {
+        Some(seat_id) => println!("Day 5-1: {}", seat_id),
+        None => println!("No seat with max seat id found!"),
+    }
+
+    match find_missing_seat_id(&available_seats) {
+        Some(missing_id) => println!("Day 5-2: {}", missing_id),
+        None => println!("No missing seat id found!"),
+    }
 }
 
 fn main() {
