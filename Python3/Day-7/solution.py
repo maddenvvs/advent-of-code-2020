@@ -56,7 +56,7 @@ class BagsRules:
         return total
 
     @ classmethod
-    def from_bags_rules(cls, rules_text: str) -> BagsRules:
+    def from_rules_text(cls, rules_text: str) -> BagsRules:
         bags_rules = cls()
 
         for bag_rule_text in rules_text.splitlines():
@@ -95,7 +95,7 @@ vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
 faded blue bags contain no other bags.
 dotted black bags contain no other bags."""
 
-    bags_graph = BagsRules.from_bags_rules(test_bags_rules_1)
+    bags_graph = BagsRules.from_rules_text(test_bags_rules_1)
     assert bags_graph.count_bag_colors_containing(SHINY_GOLD) == 4
     assert bags_graph.count_bags_inside(SHINY_GOLD) == 32
 
@@ -107,13 +107,13 @@ dark green bags contain 2 dark blue bags.
 dark blue bags contain 2 dark violet bags.
 dark violet bags contain no other bags."""
 
-    assert BagsRules.from_bags_rules(
+    assert BagsRules.from_rules_text(
         test_bags_rules_2).count_bags_inside(SHINY_GOLD) == 126
 
 
 def runt_tasks() -> None:
     with open("bags.txt") as bags_file:
-        bags_rules = BagsRules.from_bags_rules(bags_file.read())
+        bags_rules = BagsRules.from_rules_text(bags_file.read())
 
         print(
             f"Day 7-1: {bags_rules.count_bag_colors_containing(SHINY_GOLD)}")
