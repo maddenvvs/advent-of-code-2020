@@ -1,3 +1,5 @@
+#![warn(clippy::all)]
+
 use std::collections::HashSet;
 use std::fs;
 
