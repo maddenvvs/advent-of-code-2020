@@ -54,8 +54,8 @@ def find_first_incorrect_cypher_number(cypher: List[int], preamble_len: int = 25
 
 def find_encryption_weakness_value(cypher: List[int], target_value: int) -> Optional[int]:
     l, temp_sum = 0, 0
-    min_queue: Deque[int] = deque()
-    max_queue: Deque[int] = deque()
+    min_deque: Deque[int] = deque()
+    max_deque: Deque[int] = deque()
 
     for r, next_num in enumerate(cypher):
         temp_sum += next_num
@@ -63,25 +63,25 @@ def find_encryption_weakness_value(cypher: List[int], target_value: int) -> Opti
         while temp_sum > target_value:
             num_to_remove = cypher[l]
 
-            if min_queue and min_queue[0] == num_to_remove:
-                min_queue.popleft()
+            if min_deque and min_deque[0] == num_to_remove:
+                min_deque.popleft()
 
-            if max_queue and max_queue[0] == num_to_remove:
-                max_queue.popleft()
+            if max_deque and max_deque[0] == num_to_remove:
+                max_deque.popleft()
 
             temp_sum -= num_to_remove
             l += 1
 
-        while min_queue and min_queue[-1] > next_num:
-            min_queue.pop()
-        min_queue.append(next_num)
+        while min_deque and min_deque[-1] > next_num:
+            min_deque.pop()
+        min_deque.append(next_num)
 
-        while max_queue and max_queue[-1] < next_num:
-            max_queue.pop()
-        max_queue.append(next_num)
+        while max_deque and max_deque[-1] < next_num:
+            max_deque.pop()
+        max_deque.append(next_num)
 
         if temp_sum == target_value:
-            return min_queue[0] + max_queue[0]
+            return min_deque[0] + max_deque[0]
 
     return None
 
