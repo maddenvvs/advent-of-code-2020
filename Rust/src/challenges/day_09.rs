@@ -1,7 +1,5 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use std::collections::{HashMap, VecDeque};
-use std::fs;
 
 fn parse_cypher(cypher_text: &str) -> Vec<u64> {
     cypher_text.lines().map(|el| el.parse().unwrap()).collect()
@@ -126,20 +124,26 @@ fn test_tasks() {
     assert_eq!(find_encryption_weakness_of(&test_cypher, 5), Some(62_u64));
 }
 
-fn run_tasks() {
-    let cypher_text = fs::read_to_string("input/day-9.input").expect("Missing cypher text");
-    let cypher = parse_cypher(&cypher_text);
+pub struct Solution {}
 
-    if let Some(incorrect_number) = find_first_incorrect_cypher_number(&cypher, 25) {
-        println!("Day 9-1: {}", incorrect_number);
+impl Challenge for Solution {
+    fn first_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+        let cypher = parse_cypher(&cypher_text);
+
+        find_first_incorrect_cypher_number(&cypher, 25)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
     }
 
-    if let Some(encryption_weakness) = find_encryption_weakness_of(&cypher, 25) {
-        println!("Day 9-2: {}", encryption_weakness);
-    }
-}
+    fn second_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+        let cypher = parse_cypher(&cypher_text);
 
-fn main() {
-    test_tasks();
-    run_tasks();
+        find_encryption_weakness_of(&cypher, 25)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
+    }
+
+    fn run_tests(&self) {
+        test_tasks();
+    }
 }

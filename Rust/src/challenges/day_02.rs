@@ -1,8 +1,6 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::fs;
 
 lazy_static! {
     static ref PASSWORD_PATTERN: Regex = Regex::new(r"^(\d+)-(\d+) (\w): (\w+)$").unwrap();
@@ -58,43 +56,43 @@ impl PasswordDefinition<'_> {
     }
 }
 
-fn count_old_valid_passwords(passwords: &[&str]) -> i32 {
-    return passwords
-        .iter()
-        .map(|password| PasswordDefinition::from(password))
-        .filter(|def| def.align_with_old_policy())
-        .count() as i32;
+pub struct Solution {}
+
+impl Solution {
+    fn count_old_valid_passwords(passwords: &[&str]) -> i32 {
+        return passwords
+            .iter()
+            .map(|password| PasswordDefinition::from(password))
+            .filter(|def| def.align_with_old_policy())
+            .count() as i32;
+    }
+
+    fn count_current_valid_passwords(passwords: &[&str]) -> i32 {
+        return passwords
+            .iter()
+            .map(|password| PasswordDefinition::from(password))
+            .filter(|def| def.align_with_current_policy())
+            .count() as i32;
+    }
 }
 
-fn count_current_valid_passwords(passwords: &[&str]) -> i32 {
-    return passwords
-        .iter()
-        .map(|password| PasswordDefinition::from(password))
-        .filter(|def| def.align_with_current_policy())
-        .count() as i32;
-}
+impl Challenge for Solution {
+    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let passwords_list: Vec<&str> = input.lines().collect();
 
-fn task_tests() {
-    let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
+        Ok(Solution::count_old_valid_passwords(&passwords_list).to_string())
+    }
 
-    assert_eq!(count_old_valid_passwords(&test_passwords), 2);
-    assert_eq!(count_current_valid_passwords(&test_passwords), 1);
-}
+    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let passwords_list: Vec<&str> = input.lines().collect();
 
-fn run_tasks() {
-    let passwords_file_content =
-        fs::read_to_string("input/day-2.input").expect("Missing passwords file");
+        Ok(Solution::count_current_valid_passwords(&passwords_list).to_string())
+    }
 
-    let passwords_list: Vec<&str> = passwords_file_content.lines().collect();
+    fn run_tests(&self) {
+        let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
-    println!("Day 2-1: {}", count_old_valid_passwords(&passwords_list));
-    println!(
-        "Day 2-2: {}",
-        count_current_valid_passwords(&passwords_list)
-    );
-}
-
-fn main() {
-    task_tests();
-    run_tasks();
+        assert_eq!(Solution::count_old_valid_passwords(&test_passwords), 2);
+        assert_eq!(Solution::count_current_valid_passwords(&test_passwords), 1);
+    }
 }

@@ -1,7 +1,5 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use std::collections::HashSet;
-use std::fs;
 use std::str::FromStr;
 
 enum Command {
@@ -159,20 +157,26 @@ acc +6";
     assert_eq!(find_acc_value_in_correct_program(&mut program), Some(8));
 }
 
-fn run_tasks() {
-    let program_text = fs::read_to_string("input/day-8.input").expect("Missing program text");
-    let mut program = parse_program(&program_text);
+pub struct Solution {}
 
-    if let Some(acc) = find_acc_value_before_entering_loop(&program) {
-        println!("Day 8-1: {}", acc);
+impl Challenge for Solution {
+    fn first_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+        let program = parse_program(&program_text);
+
+        find_acc_value_before_entering_loop(&program)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
     }
 
-    if let Some(acc) = find_acc_value_in_correct_program(&mut program) {
-        println!("Day 8-2: {}", acc);
-    }
-}
+    fn second_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+        let mut program = parse_program(&program_text);
 
-fn main() {
-    test_tasks();
-    run_tasks();
+        find_acc_value_in_correct_program(&mut program)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
+    }
+
+    fn run_tests(&self) {
+        test_tasks();
+    }
 }

@@ -1,4 +1,4 @@
-#![warn(clippy::all)]
+use super::challenge::{Challenge, ChallengeErr};
 
 fn parse_adapters(adapters_text: &str) -> Vec<u64> {
     adapters_text
@@ -104,16 +104,22 @@ fn test_tasks() {
     assert_eq!(count_number_of_ways_to_connect(&test_adapters_2), 19208);
 }
 
-fn run_tasks() {
-    let adapters = parse_adapters(
-        &std::fs::read_to_string("input/day-10.input").expect("Missing adapters file"),
-    );
+pub struct Solution {}
 
-    println!("Day 10-1: {}", find_product_of_jolt_differences(&adapters));
-    println!("Day 10-2: {}", count_number_of_ways_to_connect(&adapters));
-}
+impl Challenge for Solution {
+    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let adapters = parse_adapters(&input);
 
-fn main() {
-    test_tasks();
-    run_tasks();
+        Ok(find_product_of_jolt_differences(&adapters).to_string())
+    }
+
+    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let adapters = parse_adapters(&input);
+
+        Ok(count_number_of_ways_to_connect(&adapters).to_string())
+    }
+
+    fn run_tests(&self) {
+        test_tasks();
+    }
 }

@@ -1,7 +1,5 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use std::collections::{HashMap, HashSet};
-use std::fs;
 
 const SHINY_GOLD: &str = "shiny gold";
 
@@ -129,20 +127,24 @@ dark violet bags contain no other bags.";
     );
 }
 
-fn run_tasks() {
-    let bags_rules_from_file =
-        fs::read_to_string("input/day-7.input").expect("Missing bags rules file");
+pub struct Solution {}
 
-    let bags_rules = BagsRules::from_rules_text(&bags_rules_from_file);
+impl Challenge for Solution {
+    fn first_part(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
+        let bags_rules = BagsRules::from_rules_text(&bags_rules_text);
 
-    println!(
-        "Day 7-1: {}",
-        bags_rules.count_bag_colors_containing(SHINY_GOLD)
-    );
-    println!("Day 7-2: {}", bags_rules.count_bags_inside(SHINY_GOLD));
-}
+        Ok(bags_rules
+            .count_bag_colors_containing(SHINY_GOLD)
+            .to_string())
+    }
 
-fn main() {
-    test_tasks();
-    run_tasks();
+    fn second_part(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
+        let bags_rules = BagsRules::from_rules_text(&bags_rules_text);
+
+        Ok(bags_rules.count_bags_inside(SHINY_GOLD).to_string())
+    }
+
+    fn run_tests(&self) {
+        test_tasks();
+    }
 }

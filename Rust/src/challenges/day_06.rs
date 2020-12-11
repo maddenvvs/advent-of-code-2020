@@ -1,7 +1,5 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use std::collections::HashSet;
-use std::fs;
 
 type Group<'a> = Vec<&'a str>;
 
@@ -48,8 +46,23 @@ fn total_sum_of_common_answers(groups: &[Group]) -> i32 {
     groups.iter().map(sum_of_common_answers).sum()
 }
 
-fn test_tasks() {
-    let test_answers = "abc
+pub struct Solution {}
+
+impl Challenge for Solution {
+    fn first_part(&self, answers_text: &str) -> Result<String, ChallengeErr> {
+        let parsed_answers = parse_answers(&answers_text);
+
+        Ok(total_sum_of_unique_answers(&parsed_answers).to_string())
+    }
+
+    fn second_part(&self, answers_text: &str) -> Result<String, ChallengeErr> {
+        let parsed_answers = parse_answers(&answers_text);
+
+        Ok(total_sum_of_common_answers(&parsed_answers).to_string())
+    }
+
+    fn run_tests(&self) {
+        let test_answers = "abc
 
 a
 b
@@ -65,21 +78,9 @@ a
 
 b";
 
-    let parsed_answers = parse_answers(test_answers);
+        let parsed_answers = parse_answers(test_answers);
 
-    assert_eq!(total_sum_of_unique_answers(&parsed_answers), 11);
-    assert_eq!(total_sum_of_common_answers(&parsed_answers), 6);
-}
-
-fn run_tasks() {
-    let answers_text = fs::read_to_string("input/day-6.input").expect("Missing answers file");
-    let parsed_answers = parse_answers(&answers_text);
-
-    println!("Day 6-1: {}", total_sum_of_unique_answers(&parsed_answers));
-    println!("Day 6-2: {}", total_sum_of_common_answers(&parsed_answers));
-}
-
-fn main() {
-    test_tasks();
-    run_tasks();
+        assert_eq!(total_sum_of_unique_answers(&parsed_answers), 11);
+        assert_eq!(total_sum_of_common_answers(&parsed_answers), 6);
+    }
 }

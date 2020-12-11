@@ -1,7 +1,5 @@
-#![warn(clippy::all)]
-
+use super::challenge::{Challenge, ChallengeErr};
 use std::collections::HashMap;
-use std::fs;
 
 fn is_number(num: &str, length: usize) -> bool {
     num.len() == length && num.chars().all(|ch| ch.is_ascii_digit())
@@ -94,82 +92,76 @@ fn count_passwords_with_strong_validation(passwords_text: &str) -> i32 {
     count_valid_passwords(passwords_text, &is_passport_valid_strong)
 }
 
-fn test_tasks() {
-    let test_passwords_file = String::from(
-        "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
-byr:1937 iyr:2017 cid:147 hgt:183cm
+pub struct Solution {}
 
-iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
-hcl:#cfa07d byr:1929
+impl Challenge for Solution {
+    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        Ok(count_passwords_with_weak_validation(&input).to_string())
+    }
 
-hcl:#ae17e1 iyr:2013
-eyr:2024
-ecl:brn pid:760753108 byr:1931
-hgt:179cm
+    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        Ok(count_passwords_with_strong_validation(&input).to_string())
+    }
 
-hcl:#cfa07d eyr:2025 pid:166559648
-iyr:2011 ecl:brn hgt:59in",
-    );
+    fn run_tests(&self) {
+        let test_passwords_file = String::from(
+            "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+    byr:1937 iyr:2017 cid:147 hgt:183cm
 
-    let test_strong_invalid_passwords = String::from(
-        "eyr:1972 cid:100
-hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+    iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+    hcl:#cfa07d byr:1929
 
-iyr:2019
-hcl:#602927 eyr:1967 hgt:170cm
-ecl:grn pid:012533040 byr:1946
+    hcl:#ae17e1 iyr:2013
+    eyr:2024
+    ecl:brn pid:760753108 byr:1931
+    hgt:179cm
 
-hcl:dab227 iyr:2012
-ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+    hcl:#cfa07d eyr:2025 pid:166559648
+    iyr:2011 ecl:brn hgt:59in",
+        );
 
-hgt:59cm ecl:zzz
-eyr:2038 hcl:74454a iyr:2023
-pid:3556412378 byr:2007",
-    );
+        let test_strong_invalid_passwords = String::from(
+            "eyr:1972 cid:100
+    hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
-    let test_strong_valid_passwords = String::from(
-        "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
-hcl:#623a2f
+    iyr:2019
+    hcl:#602927 eyr:1967 hgt:170cm
+    ecl:grn pid:012533040 byr:1946
 
-eyr:2029 ecl:blu cid:129 byr:1989
-iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+    hcl:dab227 iyr:2012
+    ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
 
-hcl:#888785
-hgt:164cm byr:2001 iyr:2015 cid:88
-pid:545766238 ecl:hzl
-eyr:2022
+    hgt:59cm ecl:zzz
+    eyr:2038 hcl:74454a iyr:2023
+    pid:3556412378 byr:2007",
+        );
 
-iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
-    );
+        let test_strong_valid_passwords = String::from(
+            "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+    hcl:#623a2f
 
-    assert_eq!(
-        count_passwords_with_weak_validation(&test_passwords_file),
-        2
-    );
-    assert_eq!(
-        count_passwords_with_strong_validation(&test_strong_invalid_passwords),
-        0
-    );
-    assert_eq!(
-        count_passwords_with_strong_validation(&test_strong_valid_passwords),
-        4
-    );
-}
+    eyr:2029 ecl:blu cid:129 byr:1989
+    iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
 
-fn run_tasks() {
-    let passwords_file_content = fs::read_to_string("input/day-4.input").unwrap();
+    hcl:#888785
+    hgt:164cm byr:2001 iyr:2015 cid:88
+    pid:545766238 ecl:hzl
+    eyr:2022
 
-    println!(
-        "Day 4-1: {}",
-        count_passwords_with_weak_validation(&passwords_file_content)
-    );
-    println!(
-        "Day 4-2: {}",
-        count_passwords_with_strong_validation(&passwords_file_content)
-    );
-}
+    iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
+        );
 
-fn main() {
-    test_tasks();
-    run_tasks();
+        assert_eq!(
+            count_passwords_with_weak_validation(&test_passwords_file),
+            2
+        );
+        assert_eq!(
+            count_passwords_with_strong_validation(&test_strong_invalid_passwords),
+            0
+        );
+        assert_eq!(
+            count_passwords_with_strong_validation(&test_strong_valid_passwords),
+            4
+        );
+    }
 }

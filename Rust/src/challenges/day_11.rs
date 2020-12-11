@@ -1,5 +1,5 @@
+use super::challenge::{Challenge, ChallengeErr};
 use core::fmt;
-use std::fs;
 
 #[derive(Clone, PartialEq)]
 enum Cell {
@@ -316,17 +316,22 @@ L.#.L..#..
     assert_eq!(test_area.tolerant_equilibrium(), 26);
 }
 
-fn run_tasks() {
-    let seats_str = fs::read_to_string("input/day-11.input").expect("Missing seats file");
+pub struct Solution {}
 
-    let mut waiting_area = WaitingArea::from_str(&seats_str);
-    println!("Day 11-1: {}", waiting_area.intolerant_equilibrium());
+impl Challenge for Solution {
+    fn first_part(&self, seats_str: &str) -> Result<String, ChallengeErr> {
+        let mut waiting_area = WaitingArea::from_str(&seats_str);
 
-    let mut waiting_area = WaitingArea::from_str(&seats_str);
-    println!("Day 11-2: {}", waiting_area.tolerant_equilibrium());
-}
+        Ok(waiting_area.intolerant_equilibrium().to_string())
+    }
 
-fn main() {
-    test_tasks();
-    run_tasks();
+    fn second_part(&self, seats_str: &str) -> Result<String, ChallengeErr> {
+        let mut waiting_area = WaitingArea::from_str(&seats_str);
+
+        Ok(waiting_area.tolerant_equilibrium().to_string())
+    }
+
+    fn run_tests(&self) {
+        test_tasks();
+    }
 }
