@@ -41,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Box::new(day_09::Solution {}),
         Box::new(day_10::Solution {}),
         Box::new(day_11::Solution {}),
-        Box::new(challenge::NoSolution),
+        Box::new(day_12::Solution {}),
         Box::new(challenge::NoSolution),
         Box::new(challenge::NoSolution),
         Box::new(challenge::NoSolution),
@@ -64,7 +64,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         None => format!("input/day-{}.input", opts.day),
     };
 
-    let problem_input = fs::read_to_string(filename)?;
+    let problem_input = match fs::read_to_string(&filename) {
+        Err(val) => panic!("Error reading file '{}': {}", &filename, val),
+        Ok(input) => input,
+    };
     let solution = &solutions[(opts.day - 1) as usize];
 
     solution.run_tests();
