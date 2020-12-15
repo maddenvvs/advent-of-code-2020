@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 
 struct BusInfo {
     id: u64,

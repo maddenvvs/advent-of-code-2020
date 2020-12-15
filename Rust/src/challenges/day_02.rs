@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 use lazy_static::lazy_static;
 use regex::Regex;
 

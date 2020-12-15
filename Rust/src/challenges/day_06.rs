@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 use std::collections::HashSet;
 
 type Group<'a> = Vec<&'a str>;

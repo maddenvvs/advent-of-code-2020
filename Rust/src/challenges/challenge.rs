@@ -1,19 +1,19 @@
-pub struct ChallengeErr {}
+use std::error::Error as ErrorTrait;
+use std::fmt::{Display, Error as fmtError, Formatter};
 
 pub trait Challenge {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr>;
+    fn first_part(&self, input: &str) -> Result<String, Error>;
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr>;
+    fn second_part(&self, input: &str) -> Result<String, Error>;
 }
 
-pub struct NoSolution;
+#[derive(Debug)]
+pub struct Error {}
 
-impl Challenge for NoSolution {
-    fn first_part(&self, _: &str) -> Result<String, ChallengeErr> {
-        Ok(String::from("No solution yet!"))
-    }
-
-    fn second_part(&self, _: &str) -> Result<String, ChallengeErr> {
-        Ok(String::from("No solution yet!"))
+impl Display for Error {
+    fn fmt(&self, _: &mut Formatter<'_>) -> Result<(), fmtError> {
+        Ok(())
     }
 }
+
+impl ErrorTrait for Error {}

@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 
 fn parse_adapters(adapters_text: &str) -> Vec<u64> {
     adapters_text

@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 use std::collections::{HashMap, VecDeque};
 
 fn parse_cypher(cypher_text: &str) -> Vec<u64> {

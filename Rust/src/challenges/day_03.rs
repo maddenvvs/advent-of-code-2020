@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, ChallengeErr};
+use super::challenge::{Challenge, Error as ChallengeErr};
 
 static SLOPES: [Point; 5] = [
     Point { x: 1, y: 1 },
