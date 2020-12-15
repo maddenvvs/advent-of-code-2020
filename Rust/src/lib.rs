@@ -51,9 +51,9 @@ fn read_problem_input(filename: &Option<String>) -> io::Result<String> {
 }
 
 pub fn run(opts: Opts) -> Result<(), Box<dyn Error>> {
-    let solutions = available_solutions();
-
     let problem_input = read_problem_input(&opts.file)?;
+
+    let solutions = available_solutions();
     let solution = &solutions[(opts.day - 1) as usize];
 
     println!(
