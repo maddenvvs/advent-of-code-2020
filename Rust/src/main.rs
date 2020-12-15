@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let solutions: Vec<Box<dyn challenge::Challenge>> = vec![
         Box::new(day_01::Solution {}),
         Box::new(day_02::Solution {}),
-        Box::new(day_03::Solution::new()),
+        Box::new(day_03::Solution {}),
         Box::new(day_04::Solution {}),
         Box::new(day_05::Solution {}),
         Box::new(day_06::Solution {}),
@@ -70,7 +70,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     let solution = &solutions[(opts.day - 1) as usize];
 
-    solution.run_tests();
     println!(
         "Day {}-1: {}",
         opts.day,

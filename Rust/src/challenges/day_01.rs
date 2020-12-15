@@ -72,14 +72,26 @@ impl Challenge for Solution {
             .map(|v| v.to_string())
             .ok_or(ChallengeErr {})
     }
+}
 
-    fn run_tests(&self) {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_find_product_of_two_numbers() {
         let test_entries = [1721, 979, 366, 299, 675, 1456];
 
         assert_eq!(
             Solution::find_product_of_two_numbers_equal_to_2020(&test_entries),
             Some(514579)
         );
+    }
+
+    #[test]
+    fn example_find_product_of_three_numbers() {
+        let test_entries = [1721, 979, 366, 299, 675, 1456];
+
         assert_eq!(
             Solution::find_product_of_three_numbers_equal_to_2020(&test_entries),
             Some(241861950)

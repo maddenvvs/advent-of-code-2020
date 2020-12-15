@@ -50,8 +50,29 @@ fn count_number_of_ways_to_connect(adapters: &[u64]) -> u64 {
     ways[ways.len() - 1]
 }
 
-fn test_tasks() {
-    let test_adapters_1_text = "16
+pub struct Solution {}
+
+impl Challenge for Solution {
+    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let adapters = parse_adapters(&input);
+
+        Ok(find_product_of_jolt_differences(&adapters).to_string())
+    }
+
+    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+        let adapters = parse_adapters(&input);
+
+        Ok(count_number_of_ways_to_connect(&adapters).to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_example_1() {
+        let test_adapters_1_text = "16
 10
 15
 5
@@ -63,11 +84,14 @@ fn test_tasks() {
 12
 4";
 
-    let test_adapters_1 = parse_adapters(&test_adapters_1_text);
-    assert_eq!(find_jolt_differences(&test_adapters_1), (0, 7, 0, 5));
-    assert_eq!(count_number_of_ways_to_connect(&test_adapters_1), 8);
+        let test_adapters_1 = parse_adapters(&test_adapters_1_text);
+        assert_eq!(find_jolt_differences(&test_adapters_1), (0, 7, 0, 5));
+        assert_eq!(count_number_of_ways_to_connect(&test_adapters_1), 8);
+    }
 
-    let test_adapters_2_text = "28
+    #[test]
+    fn test_example_2() {
+        let test_adapters_2_text = "28
 33
 18
 42
@@ -99,27 +123,8 @@ fn test_tasks() {
 10
 3";
 
-    let test_adapters_2 = parse_adapters(&test_adapters_2_text);
-    assert_eq!(find_jolt_differences(&test_adapters_2), (0, 22, 0, 10));
-    assert_eq!(count_number_of_ways_to_connect(&test_adapters_2), 19208);
-}
-
-pub struct Solution {}
-
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
-        let adapters = parse_adapters(&input);
-
-        Ok(find_product_of_jolt_differences(&adapters).to_string())
-    }
-
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
-        let adapters = parse_adapters(&input);
-
-        Ok(count_number_of_ways_to_connect(&adapters).to_string())
-    }
-
-    fn run_tests(&self) {
-        test_tasks();
+        let test_adapters_2 = parse_adapters(&test_adapters_2_text);
+        assert_eq!(find_jolt_differences(&test_adapters_2), (0, 22, 0, 10));
+        assert_eq!(count_number_of_ways_to_connect(&test_adapters_2), 19208);
     }
 }

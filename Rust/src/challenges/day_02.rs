@@ -88,11 +88,23 @@ impl Challenge for Solution {
 
         Ok(Solution::count_current_valid_passwords(&passwords_list).to_string())
     }
+}
 
-    fn run_tests(&self) {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_count_old_valid_passwords() {
         let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
         assert_eq!(Solution::count_old_valid_passwords(&test_passwords), 2);
+    }
+
+    #[test]
+    fn example_count_current_valid_passwords() {
+        let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
+
         assert_eq!(Solution::count_current_valid_passwords(&test_passwords), 1);
     }
 }

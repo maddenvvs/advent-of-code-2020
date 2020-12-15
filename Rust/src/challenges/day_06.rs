@@ -60,8 +60,14 @@ impl Challenge for Solution {
 
         Ok(total_sum_of_common_answers(&parsed_answers).to_string())
     }
+}
 
-    fn run_tests(&self) {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_total_sum_of_unique_answers() {
         let test_answers = "abc
 
 a
@@ -79,8 +85,28 @@ a
 b";
 
         let parsed_answers = parse_answers(test_answers);
-
         assert_eq!(total_sum_of_unique_answers(&parsed_answers), 11);
+    }
+
+    #[test]
+    fn example_total_sum_of_common_answers() {
+        let test_answers = "abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b";
+
+        let parsed_answers = parse_answers(test_answers);
         assert_eq!(total_sum_of_common_answers(&parsed_answers), 6);
     }
 }

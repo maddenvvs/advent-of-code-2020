@@ -92,8 +92,33 @@ fn find_encryption_weakness_of(cypher: &[u64], preamble: usize) -> Option<u64> {
         .and_then(|val| find_ecryption_weakness_value(cypher, val))
 }
 
-fn test_tasks() {
-    let test_cypher_text = "35
+pub struct Solution {}
+
+impl Challenge for Solution {
+    fn first_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+        let cypher = parse_cypher(&cypher_text);
+
+        find_first_incorrect_cypher_number(&cypher, 25)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
+    }
+
+    fn second_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+        let cypher = parse_cypher(&cypher_text);
+
+        find_encryption_weakness_of(&cypher, 25)
+            .map(|v| Ok(v.to_string()))
+            .unwrap_or(Err(ChallengeErr {}))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_find_first_incorrect_cypher_number() {
+        let test_cypher_text = "35
 20
 15
 25
@@ -114,36 +139,39 @@ fn test_tasks() {
 309
 576";
 
-    let test_cypher = parse_cypher(&test_cypher_text);
+        let test_cypher = parse_cypher(&test_cypher_text);
 
-    assert_eq!(
-        find_first_incorrect_cypher_number(&test_cypher, 5),
-        Some(127_u64)
-    );
-
-    assert_eq!(find_encryption_weakness_of(&test_cypher, 5), Some(62_u64));
-}
-
-pub struct Solution {}
-
-impl Challenge for Solution {
-    fn first_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
-        let cypher = parse_cypher(&cypher_text);
-
-        find_first_incorrect_cypher_number(&cypher, 25)
-            .map(|v| Ok(v.to_string()))
-            .unwrap_or(Err(ChallengeErr {}))
+        assert_eq!(
+            find_first_incorrect_cypher_number(&test_cypher, 5),
+            Some(127_u64)
+        );
     }
 
-    fn second_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
-        let cypher = parse_cypher(&cypher_text);
+    #[test]
+    fn example_find_encryption_weakness_of() {
+        let test_cypher_text = "35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576";
 
-        find_encryption_weakness_of(&cypher, 25)
-            .map(|v| Ok(v.to_string()))
-            .unwrap_or(Err(ChallengeErr {}))
-    }
+        let test_cypher = parse_cypher(&test_cypher_text);
 
-    fn run_tests(&self) {
-        test_tasks();
+        assert_eq!(find_encryption_weakness_of(&test_cypher, 5), Some(62_u64));
     }
 }

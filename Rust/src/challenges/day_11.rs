@@ -240,82 +240,6 @@ impl WaitingArea {
     }
 }
 
-fn test_tasks() {
-    let test_area_str = "L.LL.LL.LL
-LLLLLLL.LL
-L.L.L..L..
-LLLL.LL.LL
-L.LL.LL.LL
-L.LLLLL.LL
-..L.L.....
-LLLLLLLLLL
-L.LLLLLL.L
-L.LLLLL.LL";
-
-    let mut test_area = WaitingArea::from_str(&test_area_str);
-    let intolerant_simulation_steps = [
-        "#.##.##.##
-#######.##
-#.#.#..#..
-####.##.##
-#.##.##.##
-#.#####.##
-..#.#.....
-##########
-#.######.#
-#.#####.##",
-        "#.LL.L#.##
-#LLLLLL.L#
-L.L.L..L..
-#LLL.LL.L#
-#.LL.LL.LL
-#.LLLL#.##
-..L.L.....
-#LLLLLLLL#
-#.LLLLLL.L
-#.#LLLL.##",
-        "#.##.L#.##
-#L###LL.L#
-L.#.#..#..
-#L##.##.L#
-#.##.LL.LL
-#.###L#.##
-..#.#.....
-#L######L#
-#.LL###L.L
-#.#L###.##",
-        "#.#L.L#.##
-#LLL#LL.L#
-L.L.L..#..
-#LLL.##.L#
-#.LL.LL.LL
-#.LL#L#.##
-..L.L.....
-#L#LLLL#L#
-#.LLLLLL.L
-#.#L#L#.##",
-        "#.#L.L#.##
-#LLL#LL.L#
-L.#.L..#..
-#L##.##.L#
-#.#L.LL.LL
-#.#L#L#.##
-..L.L.....
-#L#L##L#L#
-#.LLLLLL.L
-#.#L#L#.##",
-    ];
-
-    for simulation_map in intolerant_simulation_steps.iter() {
-        test_area.simulate_intolerant_step();
-        assert_eq!(format!("{}", test_area), String::from(*simulation_map));
-    }
-    assert_eq!(test_area.intolerant_equilibrium(), 37);
-
-    let mut test_area = WaitingArea::from_str(&test_area_str);
-    assert_eq!(test_area.tolerant_equilibrium(), 26);
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -330,8 +254,116 @@ impl Challenge for Solution {
 
         Ok(waiting_area.tolerant_equilibrium().to_string())
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_intolerant_step_simulation() {
+        let test_area_str = "L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL";
+
+        let mut test_area = WaitingArea::from_str(&test_area_str);
+        let intolerant_simulation_steps = [
+            "#.##.##.##
+#######.##
+#.#.#..#..
+####.##.##
+#.##.##.##
+#.#####.##
+..#.#.....
+##########
+#.######.#
+#.#####.##",
+            "#.LL.L#.##
+#LLLLLL.L#
+L.L.L..L..
+#LLL.LL.L#
+#.LL.LL.LL
+#.LLLL#.##
+..L.L.....
+#LLLLLLLL#
+#.LLLLLL.L
+#.#LLLL.##",
+            "#.##.L#.##
+#L###LL.L#
+L.#.#..#..
+#L##.##.L#
+#.##.LL.LL
+#.###L#.##
+..#.#.....
+#L######L#
+#.LL###L.L
+#.#L###.##",
+            "#.#L.L#.##
+#LLL#LL.L#
+L.L.L..#..
+#LLL.##.L#
+#.LL.LL.LL
+#.LL#L#.##
+..L.L.....
+#L#LLLL#L#
+#.LLLLLL.L
+#.#L#L#.##",
+            "#.#L.L#.##
+#LLL#LL.L#
+L.#.L..#..
+#L##.##.L#
+#.#L.LL.LL
+#.#L#L#.##
+..L.L.....
+#L#L##L#L#
+#.LLLLLL.L
+#.#L#L#.##",
+        ];
+
+        for simulation_map in intolerant_simulation_steps.iter() {
+            test_area.simulate_intolerant_step();
+            assert_eq!(format!("{}", test_area), String::from(*simulation_map));
+        }
+    }
+
+    #[test]
+    fn test_intolerant_equilibrium() {
+        let test_area_str = "L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL";
+
+        let mut test_area = WaitingArea::from_str(&test_area_str);
+        assert_eq!(test_area.intolerant_equilibrium(), 37);
+    }
+
+    #[test]
+    fn test_tolerant_equilibrium() {
+        let test_area_str = "L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL";
+
+        let mut test_area = WaitingArea::from_str(&test_area_str);
+        assert_eq!(test_area.tolerant_equilibrium(), 26);
     }
 }

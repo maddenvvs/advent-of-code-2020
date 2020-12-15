@@ -114,24 +114,6 @@ fn simulate_instructions_with_waypoint(instructions: &[Instruction]) -> i32 {
     ))
 }
 
-fn test_tasks() {
-    let test_instructions_1_text = "F10
-N3
-F7
-R90
-F11";
-
-    let test_instructions_1 = parse_instructions(test_instructions_1_text);
-    assert_eq!(
-        simulate_instructions_with_rotation(&test_instructions_1),
-        25
-    );
-    assert_eq!(
-        simulate_instructions_with_waypoint(&test_instructions_1),
-        286
-    );
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -148,8 +130,39 @@ impl Challenge for Solution {
                 .to_string(),
         )
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_simulate_instructions_with_rotation() {
+        let test_instructions_1_text = "F10
+N3
+F7
+R90
+F11";
+
+        let test_instructions_1 = parse_instructions(test_instructions_1_text);
+        assert_eq!(
+            simulate_instructions_with_rotation(&test_instructions_1),
+            25
+        );
+    }
+
+    #[test]
+    fn test_simulate_instructions_with_waypoint() {
+        let test_instructions_1_text = "F10
+N3
+F7
+R90
+F11";
+
+        let test_instructions_1 = parse_instructions(test_instructions_1_text);
+        assert_eq!(
+            simulate_instructions_with_waypoint(&test_instructions_1),
+            286
+        );
     }
 }

@@ -63,31 +63,6 @@ impl NumbersGame {
     }
 }
 
-fn test_tasks() {
-    let numbers_game_tests = [
-        ("0,3,6", 436),
-        ("1,3,2", 1),
-        ("2,1,3", 10),
-        ("1,2,3", 27),
-        ("2,3,1", 78),
-        ("3,2,1", 438),
-        ("3,1,2", 1836),
-    ];
-
-    for (numbers_text, number_2020) in &numbers_game_tests {
-        let mut numbers_game: NumbersGame = numbers_text.parse().unwrap();
-        assert_eq!(numbers_game.find_number_at_move(2020), *number_2020);
-    }
-
-    assert_eq!(
-        "0,3,6"
-            .parse::<NumbersGame>()
-            .unwrap()
-            .find_number_at_move(30000000),
-        175594
-    );
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -106,8 +81,38 @@ impl Challenge for Solution {
             .find_number_at_move(30000000)
             .to_string())
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_find_number_at_move_2020_extended() {
+        let numbers_game_tests = [
+            ("0,3,6", 436),
+            ("1,3,2", 1),
+            ("2,1,3", 10),
+            ("1,2,3", 27),
+            ("2,3,1", 78),
+            ("3,2,1", 438),
+            ("3,1,2", 1836),
+        ];
+
+        for (numbers_text, number_2020) in &numbers_game_tests {
+            let mut numbers_game: NumbersGame = numbers_text.parse().unwrap();
+            assert_eq!(numbers_game.find_number_at_move(2020), *number_2020);
+        }
+    }
+
+    #[test]
+    fn test_find_number_at_move_30000000() {
+        assert_eq!(
+            "0,3,6"
+                .parse::<NumbersGame>()
+                .unwrap()
+                .find_number_at_move(30000000),
+            175594
+        );
     }
 }

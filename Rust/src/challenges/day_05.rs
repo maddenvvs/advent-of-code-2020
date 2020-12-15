@@ -18,12 +18,6 @@ impl Seat {
 
         Seat { seat_id }
     }
-
-    fn from_row_and_col(row: i32, col: i32) -> Seat {
-        Seat {
-            seat_id: row * 8 + col,
-        }
-    }
 }
 
 fn find_max_seat_id(seats: &[Seat]) -> Option<i32> {
@@ -67,8 +61,22 @@ impl Challenge for Solution {
             .map(|s| Ok(s.to_string()))
             .unwrap_or(Err(ChallengeErr {}))
     }
+}
 
-    fn run_tests(&self) {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    impl Seat {
+        fn from_row_and_col(row: i32, col: i32) -> Seat {
+            Seat {
+                seat_id: row * 8 + col,
+            }
+        }
+    }
+
+    #[test]
+    fn example_tests() {
         let test_seat_pass = [
             ("FBFBBFFRLR", Seat::from_row_and_col(44, 5), 357),
             ("BFFFBBFRRR", Seat::from_row_and_col(70, 7), 567),

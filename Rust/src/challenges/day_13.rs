@@ -85,34 +85,6 @@ fn find_gold_coin_timestamp(buses: &[BusInfo]) -> u64 {
     chinese_reminder_theorem_solver(&r_i, &a_i)
 }
 
-fn test_tasks() {
-    let test_notes_1_text = "939
-7,13,x,x,59,x,31,19";
-
-    let (test_timestamp, test_buses) = parse_notes(test_notes_1_text);
-
-    assert_eq!(
-        find_earliest_bus_estimation(&test_timestamp, &test_buses),
-        295
-    );
-    assert_eq!(find_gold_coin_timestamp(&test_buses), 1068781);
-
-    let test_gold_timestamps = vec![
-        ("17,x,13,19", 3417),
-        ("67,7,59,61", 754018),
-        ("67,x,7,59,61", 779210),
-        ("67,7,x,59,61", 1261476),
-        ("1789,37,47,1889", 1202161486),
-    ];
-
-    for (buses_text, gold_timestamp) in test_gold_timestamps {
-        assert_eq!(
-            find_gold_coin_timestamp(&parse_buses(buses_text)),
-            gold_timestamp
-        );
-    }
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -127,8 +99,41 @@ impl Challenge for Solution {
 
         Ok(find_gold_coin_timestamp(&buses).to_string())
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_example_both_values() {
+        let test_notes_1_text = "939
+7,13,x,x,59,x,31,19";
+
+        let (test_timestamp, test_buses) = parse_notes(test_notes_1_text);
+
+        assert_eq!(
+            find_earliest_bus_estimation(&test_timestamp, &test_buses),
+            295
+        );
+        assert_eq!(find_gold_coin_timestamp(&test_buses), 1068781);
+    }
+
+    #[test]
+    fn test_find_gold_coin_timestamp_extended() {
+        let test_gold_timestamps = vec![
+            ("17,x,13,19", 3417),
+            ("67,7,59,61", 754018),
+            ("67,x,7,59,61", 779210),
+            ("67,7,x,59,61", 1261476),
+            ("1789,37,47,1889", 1202161486),
+        ];
+
+        for (buses_text, gold_timestamp) in test_gold_timestamps {
+            assert_eq!(
+                find_gold_coin_timestamp(&parse_buses(buses_text)),
+                gold_timestamp
+            );
+        }
     }
 }

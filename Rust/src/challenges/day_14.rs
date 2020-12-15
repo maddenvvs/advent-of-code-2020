@@ -169,24 +169,6 @@ fn find_memory_values_sum_v2(program: &[Command]) -> i64 {
     evaluate_program_v2(program)
 }
 
-fn test_tasks() {
-    let test_program_1_text = "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
-mem[8] = 11
-mem[7] = 101
-mem[8] = 0";
-
-    let test_program_1 = parse_program(&test_program_1_text);
-    assert_eq!(find_memory_values_sum_v1(&test_program_1), 165);
-
-    let test_program_2_text = "mask = 000000000000000000000000000000X1001X
-mem[42] = 100
-mask = 00000000000000000000000000000000X0XX
-mem[26] = 1";
-
-    let test_program_2 = parse_program(&test_program_2_text);
-    assert_eq!(find_memory_values_sum_v2(&test_program_2), 208);
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -201,8 +183,31 @@ impl Challenge for Solution {
 
         Ok(find_memory_values_sum_v2(&program).to_string())
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_memory_sum_v1() {
+        let test_program_1_text = "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+mem[8] = 11
+mem[7] = 101
+mem[8] = 0";
+
+        let test_program_1 = parse_program(&test_program_1_text);
+        assert_eq!(find_memory_values_sum_v1(&test_program_1), 165);
+    }
+
+    #[test]
+    fn test_memory_sum_v2() {
+        let test_program_2_text = "mask = 000000000000000000000000000000X1001X
+mem[42] = 100
+mask = 00000000000000000000000000000000X0XX
+mem[26] = 1";
+
+        let test_program_2 = parse_program(&test_program_2_text);
+        assert_eq!(find_memory_values_sum_v2(&test_program_2), 208);
     }
 }

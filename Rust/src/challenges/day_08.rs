@@ -140,23 +140,6 @@ fn find_acc_value_in_correct_program(program: &mut Program) -> Option<i32> {
     None
 }
 
-fn test_tasks() {
-    let test_program_text = "nop +0
-acc +1
-jmp +4
-acc +3
-jmp -3
-acc -99
-acc +1
-jmp -4
-acc +6";
-
-    let mut program = parse_program(&test_program_text);
-
-    assert_eq!(find_acc_value_before_entering_loop(&program), Some(5));
-    assert_eq!(find_acc_value_in_correct_program(&mut program), Some(8));
-}
-
 pub struct Solution {}
 
 impl Challenge for Solution {
@@ -175,8 +158,43 @@ impl Challenge for Solution {
             .map(|v| Ok(v.to_string()))
             .unwrap_or(Err(ChallengeErr {}))
     }
+}
 
-    fn run_tests(&self) {
-        test_tasks();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_find_acc_value_before_entering_loop() {
+        let test_program_text = "nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6";
+
+        let program = parse_program(&test_program_text);
+
+        assert_eq!(find_acc_value_before_entering_loop(&program), Some(5));
+    }
+
+    #[test]
+    fn example_find_acc_value_in_correct_program() {
+        let test_program_text = "nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6";
+
+        let mut program = parse_program(&test_program_text);
+
+        assert_eq!(find_acc_value_in_correct_program(&mut program), Some(8));
     }
 }
