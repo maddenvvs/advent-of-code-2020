@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Box::new(day_12::Solution {}),
         Box::new(day_13::Solution {}),
         Box::new(day_14::Solution {}),
-        Box::new(challenge::NoSolution),
+        Box::new(day_15::Solution {}),
         Box::new(challenge::NoSolution),
         Box::new(challenge::NoSolution),
         Box::new(challenge::NoSolution),
