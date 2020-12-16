@@ -9,6 +9,45 @@ FieldRules = Dict[FieldName, FieldValidator]
 Ticket = List[int]
 
 
+class Graph:
+    def __init__(self, n):
+        self.g = [[] for _ in range(n)]
+
+    def add_edge(self, u, v):
+        self.g[u].append(v)
+        self.g[v].append(u)
+
+    def find_matching_using_Kuhn_alogrithm(self):
+        match = [-1] * len(self.g)
+        visited = set()
+        has_augmented = True
+
+        while has_augmented:
+            has_augmented = False
+            visited.clear()
+
+            for u in range(len(self.g)):
+                if match[u] == -1:
+                    has_augmented = has_augmented or self.dfs(
+                        u, visited, match)
+
+        return match
+
+    def dfs(self, u, visited, match):
+        if u in visited:
+            return False
+
+        visited.add(u)
+
+        for v in self.g[u]:
+            if match[v] == -1 or self.dfs(match[v], visited, match):
+                match[v] = u
+                match[u] = v
+                return True
+
+        return False
+
+
 @dataclass
 class Notes:
     rules: FieldRules
@@ -39,34 +78,21 @@ class Notes:
         valid_tickets = self.find_valid_tickets(
             self.nearby_tickets + [self.my_ticket])
 
-        possible_fields: List[List[FieldName]] = []
-        for column in range(len(self.my_ticket)):
-            possible_fields.append([])
+        rules_list = list(self.rules.items())
+        fields_count = len(self.rules)
+        graph = Graph(2 * fields_count)
 
-            for name, validator in self.rules.items():
+        for column in range(fields_count):
+            for rule_idx, (name, validator) in enumerate(rules_list, start=fields_count):
                 for ticket in valid_tickets:
                     if not validator(ticket[column]):
                         break
                 else:
-                    possible_fields[column].append(name)
+                    graph.add_edge(column, rule_idx)
 
-        def backtrack(column: int, temp_order: List[FieldName]) -> List[FieldName]:
-            if column >= len(possible_fields):
-                return temp_order
-            else:
-                for name in possible_fields[column]:
-                    if name in temp_order:
-                        continue
+        matching = graph.find_matching_using_Kuhn_alogrithm()
 
-                    temp_order.append(name)
-                    res = backtrack(column + 1, temp_order)
-                    if res:
-                        return res
-                    temp_order.pop()
-
-                return []
-
-        return backtrack(0, [])
+        return [rules_list[matching[rule_idx]-fields_count][0] for rule_idx in range(fields_count)]
 
     def find_valid_tickets(self, tickets: List[Ticket]) -> List[Ticket]:
         return [t for t in tickets if self.is_ticket_valid(t)]

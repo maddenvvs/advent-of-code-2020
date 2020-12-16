@@ -36,6 +36,61 @@ impl Rule {
     }
 }
 
+struct Graph {
+    g: Vec<Vec<usize>>,
+}
+
+impl Graph {
+    fn new(size: usize) -> Graph {
+        Graph {
+            g: vec![vec![]; size],
+        }
+    }
+
+    fn add_edge(&mut self, u: usize, v: usize) {
+        self.g[u].push(v);
+        self.g[v].push(u);
+    }
+
+    fn find_matching_using_kuhn_algorithm(&self) -> Vec<usize> {
+        let mut matching = vec![usize::MAX; self.g.len()];
+        let mut visited = vec![false; self.g.len()];
+        let mut has_augmented = true;
+
+        while has_augmented {
+            has_augmented = false;
+            for v in &mut visited {
+                *v = false;
+            }
+
+            for u in 0..self.g.len() {
+                if matching[u] == usize::MAX && !visited[u] {
+                    has_augmented |= self.dfs(u, &mut visited, &mut matching);
+                }
+            }
+        }
+
+        matching
+    }
+
+    fn dfs(&self, u: usize, visited: &mut Vec<bool>, matching: &mut Vec<usize>) -> bool {
+        if visited[u] {
+            return false;
+        }
+
+        visited[u] = true;
+        for &v in &self.g[u] {
+            if matching[v] == usize::MAX || self.dfs(matching[v], visited, matching) {
+                matching[v] = u;
+                matching[u] = v;
+                return true;
+            }
+        }
+
+        false
+    }
+}
+
 struct Notes {
     rules: Vec<Rule>,
     my_ticket: Ticket,
@@ -63,12 +118,11 @@ impl Notes {
 
     fn find_field_order(&self) -> Vec<&String> {
         let valid_tickets = self.find_valid_tickets();
-        let mut possible_fields: Vec<Vec<&String>> = vec![];
+        let rules_count = self.rules.len();
+        let mut graph = Graph::new(2 * rules_count);
 
         for column in 0..self.my_ticket.len() {
-            possible_fields.push(vec![]);
-
-            for rule in self.rules.iter() {
+            for (rule_idx, rule) in self.rules.iter().enumerate() {
                 let mut acceptable_field = true;
                 for ticket in valid_tickets.iter() {
                     if !rule.apply_to(ticket[column]) {
@@ -78,39 +132,16 @@ impl Notes {
                 }
 
                 if acceptable_field {
-                    possible_fields[column].push(&rule.name);
+                    graph.add_edge(column, rule_idx + rules_count);
                 }
             }
         }
 
-        let mut solution = vec![];
-        Notes::find_rows_order_rec(0, &possible_fields, &mut solution);
+        let matching = graph.find_matching_using_kuhn_algorithm();
 
-        solution
-    }
-
-    fn find_rows_order_rec<'a>(
-        column: usize,
-        possible_fields: &Vec<Vec<&'a String>>,
-        temp_solution: &mut Vec<&'a String>,
-    ) -> bool {
-        if column >= possible_fields.len() {
-            return true;
-        }
-
-        for name in possible_fields[column].iter() {
-            if temp_solution.contains(name) {
-                continue;
-            }
-
-            temp_solution.push(name);
-            if Notes::find_rows_order_rec(column + 1, possible_fields, temp_solution) {
-                return true;
-            }
-            temp_solution.pop();
-        }
-
-        return false;
+        (0..rules_count)
+            .map(|idx| &self.rules[matching[idx] - rules_count].name)
+            .collect()
     }
 
     fn find_valid_tickets(&self) -> Vec<&Ticket> {
