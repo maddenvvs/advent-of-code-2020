@@ -26,7 +26,7 @@ fn available_solutions() -> Vec<Box<dyn challenge::Challenge>> {
         Box::new(day_13::Solution {}),
         Box::new(day_14::Solution {}),
         Box::new(day_15::Solution {}),
-        Box::new(NoSolution),
+        Box::new(day_16::Solution {}),
         Box::new(NoSolution),
         Box::new(NoSolution),
         Box::new(NoSolution),
