@@ -1,8 +1,14 @@
 from functools import reduce
 from operator import mul
-from typing import Iterable, Sequence, Tuple
+from typing import Iterable, Sequence, Tuple, List
+
+from .solution import Solution
 
 NEW_YEAR = 2020
+
+
+def parse_entries(entries_text: str) -> List[int]:
+    return [int(l) for l in entries_text.splitlines()]
 
 
 def product(*args: int) -> int:
@@ -50,26 +56,14 @@ def second_task(entries: Sequence[int]) -> int:
     return product(*find_three_entries_with_sum_2020(entries))
 
 
-def test_tasks() -> None:
-    test_entries = [1721, 979, 366, 299, 675, 1456]
+class Day01(Solution):
 
-    assert first_task(test_entries) == 514579
-    assert second_task(test_entries) == 241861950
+    def first_task(self, entries_text: str) -> str:
+        entries = parse_entries(entries_text)
 
+        return str(first_task(entries))
 
-def run_tasks() -> None:
-    with open("report.txt") as report_file:
-        report_entries = [int(l) for l in report_file]
-        print(
-            f"Day 1-1: {first_task(report_entries)}")
-        print(
-            f"Day 1-2: {second_task(report_entries)}")
+    def second_task(self, entries_text: str) -> str:
+        entries = parse_entries(entries_text)
 
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(second_task(entries))

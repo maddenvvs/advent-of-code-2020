@@ -1,6 +1,7 @@
 import re
 from typing import Callable, Iterable
 
+from .solution import Solution
 
 PASSWORD_REGEX_PATTERN = re.compile(r"^(\d+)-(\d+) (\w): (\w+)$")
 
@@ -36,29 +37,16 @@ def count_current_valid_passwords(passwords: Iterable[str]) -> int:
     return sum(is_password_valid(password, current_policy) for password in passwords)
 
 
-def test_tasks() -> None:
-    test_passwords = [
-        "1-3 a: abcde",
-        "1-3 b: cdefg",
-        "2-9 c: ccccccccc"
-    ]
+class Day02(Solution):
 
-    assert count_old_valid_passwords(test_passwords) == 2
-    assert count_current_valid_passwords(test_passwords) == 1
+    def first_task(self, passwords_text: str) -> str:
+        passwords = [password.strip()
+                     for password in passwords_text.splitlines()]
 
+        return str(count_old_valid_passwords(passwords))
 
-def run_tasks() -> None:
-    with open("passwords.txt") as passwords_list:
-        passwords = [password.strip() for password in passwords_list]
+    def second_task(self, passwords_text: str) -> str:
+        passwords = [password.strip()
+                     for password in passwords_text.splitlines()]
 
-        print(f"Day 2-1: {count_old_valid_passwords(passwords)}")
-        print(f"Day 2-2: {count_current_valid_passwords(passwords)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(count_current_valid_passwords(passwords))

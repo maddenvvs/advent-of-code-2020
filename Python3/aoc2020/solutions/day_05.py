@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
+from .solution import Solution
+
 
 class Seat:
     __slots__ = "seat_id"
@@ -45,34 +47,16 @@ def find_highest_seat_id(seats: Iterable[Seat]) -> int:
     return max(seats, key=lambda x: x.seat_id).seat_id
 
 
-def test_tasks() -> None:
-    test_seat_pass = [
-        ("FBFBBFFRLR", Seat.from_row_and_col(44, 5), 357),
-        ("BFFFBBFRRR", Seat.from_row_and_col(70, 7), 567),
-        ("FFFBBBFRRR", Seat.from_row_and_col(14, 7), 119),
-        ("BBFFBBFRLL", Seat.from_row_and_col(102, 4), 820)
-    ]
+class Day05(Solution):
 
-    for seat_pass, seat, seat_id in test_seat_pass:
-        found_seat = Seat.from_seat_pass(seat_pass)
-
-        assert found_seat == seat
-        assert found_seat.seat_id == seat_id
-
-
-def run_tasks() -> None:
-    with open("boarding_passes.txt") as passes_file:
-        passes = (line.strip() for line in passes_file)
+    def first_task(self, passes_text: str) -> str:
+        passes = (line.strip() for line in passes_text.splitlines())
         seats = [Seat.from_seat_pass(seat) for seat in passes]
 
-        print(f"Day 5-1: {find_highest_seat_id(seats)}")
-        print(f"Day 5-2: {find_missing_seat_id(seats)}")
+        return str(find_highest_seat_id(seats))
 
+    def second_task(self, passes_text: str) -> str:
+        passes = (line.strip() for line in passes_text.splitlines())
+        seats = [Seat.from_seat_pass(seat) for seat in passes]
 
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_missing_seat_id(seats))
