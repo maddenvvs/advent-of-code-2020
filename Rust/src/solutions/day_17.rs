@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error};
+use super::solution::{Error, Solution};
 use itertools::iproduct;
 use std::collections::{HashMap, HashSet};
 use std::mem;
@@ -111,16 +111,16 @@ fn neighbour_cubes(point: &Vec<i32>, dimensions: usize) -> Vec<Vec<i32>> {
     neighbours
 }
 
-pub struct Solution {}
+pub struct Day17 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, cube_text: &str) -> Result<String, Error> {
+impl Solution for Day17 {
+    fn first_task(&self, cube_text: &str) -> Result<String, Error> {
         let mut cube = ConwayCube::from_str(cube_text, 3);
 
         Ok(cube.simulate_six_times().to_string())
     }
 
-    fn second_part(&self, cube_text: &str) -> Result<String, Error> {
+    fn second_task(&self, cube_text: &str) -> Result<String, Error> {
         let mut cube = ConwayCube::from_str(cube_text, 4);
 
         Ok(cube.simulate_six_times().to_string())

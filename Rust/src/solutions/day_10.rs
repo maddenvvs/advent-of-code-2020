@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 
 fn parse_adapters(adapters_text: &str) -> Vec<u64> {
     adapters_text
@@ -50,16 +50,16 @@ fn count_number_of_ways_to_connect(adapters: &[u64]) -> u64 {
     ways[ways.len() - 1]
 }
 
-pub struct Solution {}
+pub struct Day10 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day10 {
+    fn first_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let adapters = parse_adapters(&input);
 
         Ok(find_product_of_jolt_differences(&adapters).to_string())
     }
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let adapters = parse_adapters(&input);
 
         Ok(count_number_of_ways_to_connect(&adapters).to_string())

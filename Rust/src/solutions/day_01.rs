@@ -1,11 +1,11 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashSet;
 
 const NEW_YEAR: i32 = 2020;
 
-pub struct Solution {}
+pub struct Day01 {}
 
-impl Solution {
+impl Day01 {
     fn parse_input(input: &str) -> Vec<i32> {
         input.lines().map(|s| s.parse().unwrap()).collect()
     }
@@ -56,19 +56,19 @@ impl Solution {
     }
 }
 
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
-        let entities = Solution::parse_input(input);
+impl Solution for Day01 {
+    fn first_task(&self, input: &str) -> Result<String, ChallengeErr> {
+        let entities = Day01::parse_input(input);
 
-        Solution::find_product_of_two_numbers_equal_to_2020(&entities)
+        Day01::find_product_of_two_numbers_equal_to_2020(&entities)
             .map(|v| v.to_string())
             .ok_or(ChallengeErr {})
     }
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
-        let entities = Solution::parse_input(input);
+    fn second_task(&self, input: &str) -> Result<String, ChallengeErr> {
+        let entities = Day01::parse_input(input);
 
-        Solution::find_product_of_three_numbers_equal_to_2020(&entities)
+        Day01::find_product_of_three_numbers_equal_to_2020(&entities)
             .map(|v| v.to_string())
             .ok_or(ChallengeErr {})
     }
@@ -83,7 +83,7 @@ mod tests {
         let test_entries = [1721, 979, 366, 299, 675, 1456];
 
         assert_eq!(
-            Solution::find_product_of_two_numbers_equal_to_2020(&test_entries),
+            Day01::find_product_of_two_numbers_equal_to_2020(&test_entries),
             Some(514579)
         );
     }
@@ -93,7 +93,7 @@ mod tests {
         let test_entries = [1721, 979, 366, 299, 675, 1456];
 
         assert_eq!(
-            Solution::find_product_of_three_numbers_equal_to_2020(&test_entries),
+            Day01::find_product_of_three_numbers_equal_to_2020(&test_entries),
             Some(241861950)
         );
     }

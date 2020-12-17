@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashMap;
 
 fn is_number(num: &str, length: usize) -> bool {
@@ -92,14 +92,14 @@ fn count_passwords_with_strong_validation(passwords_text: &str) -> i32 {
     count_valid_passwords(passwords_text, &is_passport_valid_strong)
 }
 
-pub struct Solution {}
+pub struct Day04 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day04 {
+    fn first_task(&self, input: &str) -> Result<String, ChallengeErr> {
         Ok(count_passwords_with_weak_validation(&input).to_string())
     }
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, input: &str) -> Result<String, ChallengeErr> {
         Ok(count_passwords_with_strong_validation(&input).to_string())
     }
 }

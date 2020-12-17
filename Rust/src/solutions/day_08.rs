@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashSet;
 use std::str::FromStr;
 
@@ -140,10 +140,10 @@ fn find_acc_value_in_correct_program(program: &mut Program) -> Option<i32> {
     None
 }
 
-pub struct Solution {}
+pub struct Day08 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day08 {
+    fn first_task(&self, program_text: &str) -> Result<String, ChallengeErr> {
         let program = parse_program(&program_text);
 
         find_acc_value_before_entering_loop(&program)
@@ -151,7 +151,7 @@ impl Challenge for Solution {
             .unwrap_or(Err(ChallengeErr {}))
     }
 
-    fn second_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, program_text: &str) -> Result<String, ChallengeErr> {
         let mut program = parse_program(&program_text);
 
         find_acc_value_in_correct_program(&mut program)

@@ -1,10 +1,10 @@
 use std::error::Error as ErrorTrait;
 use std::fmt::{Display, Error as fmtError, Formatter};
 
-pub trait Challenge {
-    fn first_part(&self, input: &str) -> Result<String, Error>;
+pub trait Solution {
+    fn first_task(&self, input: &str) -> Result<String, Error>;
 
-    fn second_part(&self, input: &str) -> Result<String, Error>;
+    fn second_task(&self, input: &str) -> Result<String, Error>;
 }
 
 #[derive(Debug)]

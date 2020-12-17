@@ -1,5 +1,5 @@
-pub mod challenge;
 pub mod no_solution;
+pub mod solution;
 
 pub mod day_01;
 pub mod day_02;

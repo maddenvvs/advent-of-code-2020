@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 
 #[derive(PartialEq, Debug)]
 struct Seat {
@@ -43,10 +43,10 @@ fn parse_seats(input: &str) -> Vec<Seat> {
     input.split_whitespace().map(Seat::from_seat_pass).collect()
 }
 
-pub struct Solution {}
+pub struct Day05 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day05 {
+    fn first_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let available_seats = parse_seats(input);
 
         find_max_seat_id(&available_seats)
@@ -54,7 +54,7 @@ impl Challenge for Solution {
             .unwrap_or(Err(ChallengeErr {}))
     }
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let available_seats = parse_seats(input);
 
         find_missing_seat_id(&available_seats)

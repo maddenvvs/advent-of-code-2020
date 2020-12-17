@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use core::fmt;
 
 #[derive(Clone, PartialEq)]
@@ -240,16 +240,16 @@ impl WaitingArea {
     }
 }
 
-pub struct Solution {}
+pub struct Day11 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, seats_str: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day11 {
+    fn first_task(&self, seats_str: &str) -> Result<String, ChallengeErr> {
         let mut waiting_area = WaitingArea::from_str(&seats_str);
 
         Ok(waiting_area.intolerant_equilibrium().to_string())
     }
 
-    fn second_part(&self, seats_str: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, seats_str: &str) -> Result<String, ChallengeErr> {
         let mut waiting_area = WaitingArea::from_str(&seats_str);
 
         Ok(waiting_area.tolerant_equilibrium().to_string())

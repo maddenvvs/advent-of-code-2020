@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 
 struct BusInfo {
     id: u64,
@@ -85,16 +85,16 @@ fn find_gold_coin_timestamp(buses: &[BusInfo]) -> u64 {
     chinese_reminder_theorem_solver(&r_i, &a_i)
 }
 
-pub struct Solution {}
+pub struct Day13 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, notes_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day13 {
+    fn first_task(&self, notes_text: &str) -> Result<String, ChallengeErr> {
         let (timestamp, buses) = parse_notes(&notes_text);
 
         Ok(find_earliest_bus_estimation(&timestamp, &buses).to_string())
     }
 
-    fn second_part(&self, notes_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, notes_text: &str) -> Result<String, ChallengeErr> {
         let (_, buses) = parse_notes(&notes_text);
 
         Ok(find_gold_coin_timestamp(&buses).to_string())

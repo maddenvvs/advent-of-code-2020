@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::{HashMap, VecDeque};
 
 fn parse_cypher(cypher_text: &str) -> Vec<u64> {
@@ -92,10 +92,10 @@ fn find_encryption_weakness_of(cypher: &[u64], preamble: usize) -> Option<u64> {
         .and_then(|val| find_ecryption_weakness_value(cypher, val))
 }
 
-pub struct Solution {}
+pub struct Day09 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day09 {
+    fn first_task(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
         let cypher = parse_cypher(&cypher_text);
 
         find_first_incorrect_cypher_number(&cypher, 25)
@@ -103,7 +103,7 @@ impl Challenge for Solution {
             .unwrap_or(Err(ChallengeErr {}))
     }
 
-    fn second_part(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, cypher_text: &str) -> Result<String, ChallengeErr> {
         let cypher = parse_cypher(&cypher_text);
 
         find_encryption_weakness_of(&cypher, 25)

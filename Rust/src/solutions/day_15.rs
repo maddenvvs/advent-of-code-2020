@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashMap;
 use std::str::FromStr;
 
@@ -63,10 +63,10 @@ impl NumbersGame {
     }
 }
 
-pub struct Solution {}
+pub struct Day15 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, numbers_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day15 {
+    fn first_task(&self, numbers_text: &str) -> Result<String, ChallengeErr> {
         Ok(numbers_text
             .parse::<NumbersGame>()
             .unwrap()
@@ -74,7 +74,7 @@ impl Challenge for Solution {
             .to_string())
     }
 
-    fn second_part(&self, numbers_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, numbers_text: &str) -> Result<String, ChallengeErr> {
         Ok(numbers_text
             .parse::<NumbersGame>()
             .unwrap()

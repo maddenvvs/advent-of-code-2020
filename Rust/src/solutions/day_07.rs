@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::{HashMap, HashSet};
 
 const SHINY_GOLD: &str = "shiny gold";
@@ -97,10 +97,10 @@ impl BagsRules {
     }
 }
 
-pub struct Solution {}
+pub struct Day07 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day07 {
+    fn first_task(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
         let bags_rules = BagsRules::from_rules_text(&bags_rules_text);
 
         Ok(bags_rules
@@ -108,7 +108,7 @@ impl Challenge for Solution {
             .to_string())
     }
 
-    fn second_part(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, bags_rules_text: &str) -> Result<String, ChallengeErr> {
         let bags_rules = BagsRules::from_rules_text(&bags_rules_text);
 
         Ok(bags_rules.count_bags_inside(SHINY_GOLD).to_string())

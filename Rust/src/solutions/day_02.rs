@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -56,9 +56,9 @@ impl PasswordDefinition<'_> {
     }
 }
 
-pub struct Solution {}
+pub struct Day02 {}
 
-impl Solution {
+impl Day02 {
     fn count_old_valid_passwords(passwords: &[&str]) -> i32 {
         return passwords
             .iter()
@@ -76,17 +76,17 @@ impl Solution {
     }
 }
 
-impl Challenge for Solution {
-    fn first_part(&self, input: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day02 {
+    fn first_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let passwords_list: Vec<&str> = input.lines().collect();
 
-        Ok(Solution::count_old_valid_passwords(&passwords_list).to_string())
+        Ok(Day02::count_old_valid_passwords(&passwords_list).to_string())
     }
 
-    fn second_part(&self, input: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, input: &str) -> Result<String, ChallengeErr> {
         let passwords_list: Vec<&str> = input.lines().collect();
 
-        Ok(Solution::count_current_valid_passwords(&passwords_list).to_string())
+        Ok(Day02::count_current_valid_passwords(&passwords_list).to_string())
     }
 }
 
@@ -98,13 +98,13 @@ mod tests {
     fn example_count_old_valid_passwords() {
         let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
-        assert_eq!(Solution::count_old_valid_passwords(&test_passwords), 2);
+        assert_eq!(Day02::count_old_valid_passwords(&test_passwords), 2);
     }
 
     #[test]
     fn example_count_current_valid_passwords() {
         let test_passwords = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
-        assert_eq!(Solution::count_current_valid_passwords(&test_passwords), 1);
+        assert_eq!(Day02::count_current_valid_passwords(&test_passwords), 1);
     }
 }

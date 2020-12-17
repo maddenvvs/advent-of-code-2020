@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashSet;
 
 type Group<'a> = Vec<&'a str>;
@@ -46,16 +46,16 @@ fn total_sum_of_common_answers(groups: &[Group]) -> i32 {
     groups.iter().map(sum_of_common_answers).sum()
 }
 
-pub struct Solution {}
+pub struct Day06 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, answers_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day06 {
+    fn first_task(&self, answers_text: &str) -> Result<String, ChallengeErr> {
         let parsed_answers = parse_answers(&answers_text);
 
         Ok(total_sum_of_unique_answers(&parsed_answers).to_string())
     }
 
-    fn second_part(&self, answers_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, answers_text: &str) -> Result<String, ChallengeErr> {
         let parsed_answers = parse_answers(&answers_text);
 
         Ok(total_sum_of_common_answers(&parsed_answers).to_string())

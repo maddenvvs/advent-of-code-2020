@@ -1,33 +1,33 @@
 pub mod config;
 use config::Opts;
 
-mod challenges;
-use challenges::no_solution::NoSolution;
-use challenges::*;
+mod solutions;
+use solutions::no_solution::NoSolution;
+use solutions::*;
 
 use std::error::Error;
 use std::fs;
 use std::io::{self, Read};
 
-fn available_solutions() -> Vec<Box<dyn challenge::Challenge>> {
+fn available_solutions() -> Vec<Box<dyn solution::Solution>> {
     vec![
-        Box::new(day_01::Solution {}),
-        Box::new(day_02::Solution {}),
-        Box::new(day_03::Solution {}),
-        Box::new(day_04::Solution {}),
-        Box::new(day_05::Solution {}),
-        Box::new(day_06::Solution {}),
-        Box::new(day_07::Solution {}),
-        Box::new(day_08::Solution {}),
-        Box::new(day_09::Solution {}),
-        Box::new(day_10::Solution {}),
-        Box::new(day_11::Solution {}),
-        Box::new(day_12::Solution {}),
-        Box::new(day_13::Solution {}),
-        Box::new(day_14::Solution {}),
-        Box::new(day_15::Solution {}),
-        Box::new(day_16::Solution {}),
-        Box::new(day_17::Solution {}),
+        Box::new(day_01::Day01 {}),
+        Box::new(day_02::Day02 {}),
+        Box::new(day_03::Day03 {}),
+        Box::new(day_04::Day04 {}),
+        Box::new(day_05::Day05 {}),
+        Box::new(day_06::Day06 {}),
+        Box::new(day_07::Day07 {}),
+        Box::new(day_08::Day08 {}),
+        Box::new(day_09::Day09 {}),
+        Box::new(day_10::Day10 {}),
+        Box::new(day_11::Day11 {}),
+        Box::new(day_12::Day12 {}),
+        Box::new(day_13::Day13 {}),
+        Box::new(day_14::Day14 {}),
+        Box::new(day_15::Day15 {}),
+        Box::new(day_16::Day16 {}),
+        Box::new(day_17::Day17 {}),
         Box::new(NoSolution),
         Box::new(NoSolution),
         Box::new(NoSolution),
@@ -59,12 +59,12 @@ pub fn run(opts: Opts) -> Result<(), Box<dyn Error>> {
     println!(
         "Day {}-1: {}",
         opts.day,
-        solution.first_part(&problem_input)?
+        solution.first_task(&problem_input)?
     );
     println!(
         "Day {}-2: {}",
         opts.day,
-        solution.second_part(&problem_input)?
+        solution.second_task(&problem_input)?
     );
 
     Ok(())

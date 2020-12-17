@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use std::collections::HashMap;
 
 enum Command<'a> {
@@ -169,16 +169,16 @@ fn find_memory_values_sum_v2(program: &[Command]) -> i64 {
     evaluate_program_v2(program)
 }
 
-pub struct Solution {}
+pub struct Day14 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day14 {
+    fn first_task(&self, program_text: &str) -> Result<String, ChallengeErr> {
         let program = parse_program(program_text);
 
         Ok(find_memory_values_sum_v1(&program).to_string())
     }
 
-    fn second_part(&self, program_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, program_text: &str) -> Result<String, ChallengeErr> {
         let program = parse_program(program_text);
 
         Ok(find_memory_values_sum_v2(&program).to_string())

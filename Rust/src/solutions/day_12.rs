@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error as ChallengeErr};
+use super::solution::{Error as ChallengeErr, Solution};
 use num_complex::Complex;
 use std::str::FromStr;
 
@@ -114,17 +114,17 @@ fn simulate_instructions_with_waypoint(instructions: &[Instruction]) -> i32 {
     ))
 }
 
-pub struct Solution {}
+pub struct Day12 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, instructions_text: &str) -> Result<String, ChallengeErr> {
+impl Solution for Day12 {
+    fn first_task(&self, instructions_text: &str) -> Result<String, ChallengeErr> {
         Ok(
             simulate_instructions_with_rotation(&parse_instructions(&instructions_text))
                 .to_string(),
         )
     }
 
-    fn second_part(&self, instructions_text: &str) -> Result<String, ChallengeErr> {
+    fn second_task(&self, instructions_text: &str) -> Result<String, ChallengeErr> {
         Ok(
             simulate_instructions_with_waypoint(&parse_instructions(&instructions_text))
                 .to_string(),

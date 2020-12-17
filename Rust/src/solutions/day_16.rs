@@ -1,4 +1,4 @@
-use super::challenge::{Challenge, Error};
+use super::solution::{Error, Solution};
 use std::str::FromStr;
 
 type Ticket = Vec<i32>;
@@ -203,15 +203,15 @@ impl FromStr for Notes {
     }
 }
 
-pub struct Solution {}
+pub struct Day16 {}
 
-impl Challenge for Solution {
-    fn first_part(&self, notes_text: &str) -> Result<String, Error> {
+impl Solution for Day16 {
+    fn first_task(&self, notes_text: &str) -> Result<String, Error> {
         let notes: Notes = notes_text.parse().unwrap();
         Ok(notes.find_error_rate().to_string())
     }
 
-    fn second_part(&self, notes_text: &str) -> Result<String, Error> {
+    fn second_task(&self, notes_text: &str) -> Result<String, Error> {
         let notes: Notes = notes_text.parse().unwrap();
         Ok(notes.find_product_of_departure_fields().to_string())
     }
