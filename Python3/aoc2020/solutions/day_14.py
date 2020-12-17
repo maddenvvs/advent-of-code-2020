@@ -4,6 +4,8 @@ from abc import ABC
 from collections import defaultdict
 from typing import Dict, List, Tuple, Optional
 
+from .solution import Solution
+
 ADDRESS_SIZE = 36
 
 
@@ -160,36 +162,14 @@ def find_memory_values_sum_v2(program: List[Command]) -> int:
     return emulate_program_v2(program)
 
 
-def test_tasks() -> None:
-    test_program_1_text = """mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
-mem[8] = 11
-mem[7] = 101
-mem[8] = 0"""
+class Day14(Solution):
 
-    test_program_1 = parse_program(test_program_1_text)
-    assert find_memory_values_sum_v1(test_program_1) == 165
+    def first_task(self, program_text: str) -> str:
+        program = parse_program(program_text)
 
-    test_program_2_text = """mask = 000000000000000000000000000000X1001X
-mem[42] = 100
-mask = 00000000000000000000000000000000X0XX
-mem[26] = 1"""
+        return str(find_memory_values_sum_v1(program))
 
-    test_program_2 = parse_program(test_program_2_text)
-    assert find_memory_values_sum_v2(test_program_2) == 208
+    def second_task(self, program_text: str) -> str:
+        program = parse_program(program_text)
 
-
-def run_tasks() -> None:
-    with open("program.txt") as program_file:
-        program = parse_program(program_file.read())
-
-        print(f"Day 14-1: {find_memory_values_sum_v1(program)}")
-        print(f"Day 14-2: {find_memory_values_sum_v2(program)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_memory_values_sum_v2(program))

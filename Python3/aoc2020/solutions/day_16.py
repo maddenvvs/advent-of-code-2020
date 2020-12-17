@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Dict, Iterator, List, Tuple
 
+from .solution import Solution
+
 FieldName = str
 FieldValidator = Callable[[int], bool]
 FieldRules = Dict[FieldName, FieldValidator]
@@ -156,51 +158,14 @@ class Notes:
         return validator
 
 
-def test_tasks() -> None:
-    test_notes_1_txt = """class: 1-3 or 5-7
-row: 6-11 or 33-44
-seat: 13-40 or 45-50
+class Day16(Solution):
 
-your ticket:
-7,1,14
+    def first_task(self, notes_text: str) -> str:
+        notes = Notes.from_str(notes_text)
 
-nearby tickets:
-7,3,47
-40,4,50
-55,2,20
-38,6,12"""
+        return str(notes.sum_of_invalid_values_in_nearby_tickets())
 
-    test_notes_1 = Notes.from_str(test_notes_1_txt)
-    assert test_notes_1.sum_of_invalid_values_in_nearby_tickets() == 71
+    def second_task(self, notes_text: str) -> str:
+        notes = Notes.from_str(notes_text)
 
-    test_notes_2_txt = """class: 0-1 or 4-19
-row: 0-5 or 8-19
-seat: 0-13 or 16-19
-
-your ticket:
-11,12,13
-
-nearby tickets:
-3,9,18
-15,1,5
-5,14,9"""
-
-    test_notes_2 = Notes.from_str(test_notes_2_txt)
-    assert test_notes_2.find_field_order() == ["row", "class", "seat"]
-
-
-def run_tasks() -> None:
-    with open("notes.txt") as notes_file:
-        notes = Notes.from_str(notes_file.read())
-
-        print(f"Day 16-1: {notes.sum_of_invalid_values_in_nearby_tickets()}")
-        print(f"Day 16-2: {notes.product_of_departure_values()}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(notes.product_of_departure_values())

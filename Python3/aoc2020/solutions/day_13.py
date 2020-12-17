@@ -6,6 +6,8 @@ from math import ceil, gcd
 from operator import mul
 from typing import Iterable, List, Sequence, Tuple
 
+from .solution import Solution
+
 BusInfo = Tuple[int, int]
 
 
@@ -61,35 +63,14 @@ def find_gold_coin_timestamp(buses: Iterable[BusInfo]) -> int:
     return chinese_reminder_theorem_solver(r_i, a_i)
 
 
-def test_tasks() -> None:
-    test_notes_1_text = """939
-7,13,x,x,59,x,31,19"""
+class Day13(Solution):
 
-    test_timestamp, test_buses = parse_notes(test_notes_1_text)
+    def first_task(self, notes_text: str) -> str:
+        timestamp, buses = parse_notes(notes_text)
 
-    assert find_earliest_bus_estimation(test_timestamp, test_buses) == 295
-    assert find_gold_coin_timestamp(test_buses) == 1068781
+        return str(find_earliest_bus_estimation(timestamp, buses))
 
-    test_gold_timestamps = [("17,x,13,19", 3417), ("67,7,59,61", 754018), (
-        "67,x,7,59,61", 779210), ("67,7,x,59,61", 1261476), ("1789,37,47,1889", 1202161486)]
+    def second_task(self, notes_text: str) -> str:
+        _, buses = parse_notes(notes_text)
 
-    for buses_text, gold_timestamp in test_gold_timestamps:
-        assert find_gold_coin_timestamp(
-            parse_buses(buses_text)) == gold_timestamp
-
-
-def run_tasks() -> None:
-    with open("notes.txt") as notes_file:
-        timestamp, buses = parse_notes(notes_file.read())
-
-        print(f"Day 13-1: {find_earliest_bus_estimation(timestamp, buses)}")
-        print(f"Day 13-2: {find_gold_coin_timestamp(buses)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_gold_coin_timestamp(buses))

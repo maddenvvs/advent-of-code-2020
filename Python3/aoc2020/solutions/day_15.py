@@ -1,6 +1,8 @@
 from itertools import dropwhile
 from typing import Generator, List, Sequence, Tuple
 
+from .solution import Solution
+
 
 def parse_numbers(numbers_text: str) -> List[int]:
     return [int(i, base=10) for i in numbers_text.split(",")]
@@ -37,28 +39,14 @@ def find_30000000th_number(numbers: Sequence[int]) -> int:
     return find_number_at_move(numbers, 30000000)
 
 
-def test_tasks() -> None:
-    numbers_game_tests = (("0,3,6", 436), ("1,3,2", 1), ("2,1,3", 10),
-                          ("1,2,3", 27), ("2,3,1", 78), ("3,2,1", 438), ("3,1,2", 1836))
+class Day15(Solution):
 
-    for numbers_text, number_2020 in numbers_game_tests:
-        assert find_2020th_number(parse_numbers(numbers_text)) == number_2020
+    def first_task(self, numbers_text: str) -> str:
+        numbers = parse_numbers(numbers_text)
 
-    assert find_30000000th_number(parse_numbers("0,3,6")) == 175594
+        return str(find_2020th_number(numbers))
 
+    def second_task(self, numbers_text: str) -> str:
+        numbers = parse_numbers(numbers_text)
 
-def run_tasks() -> None:
-    with open("numbers.txt") as numbers_file:
-        numbers = parse_numbers(numbers_file.read())
-
-        print(f"Day 15-1: {find_2020th_number(numbers)}")
-        print(f"Day 15-2: {find_30000000th_number(numbers)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_30000000th_number(numbers))

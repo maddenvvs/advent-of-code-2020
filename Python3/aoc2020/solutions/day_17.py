@@ -5,6 +5,8 @@ from functools import reduce
 from itertools import product
 from typing import Dict, Iterator, List, Set, Tuple
 
+from .solution import Solution
+
 Point = Tuple
 
 
@@ -72,35 +74,12 @@ class ConwayCube:
         return ConwayCube(initial_text.splitlines(), dimensions)
 
 
-def test_tasks() -> None:
-    test_initial_state = """.#.
-..#
-###"""
+class Day17(Solution):
 
-    test_cube = ConwayCube.from_str(test_initial_state, 3)
-    for active_cubes in [11, 21, 38]:
-        assert test_cube.simulate_step() == active_cubes
-
-    test_cube = ConwayCube.from_str(test_initial_state, 4)
-    for active_cubes in [29, 60]:
-        assert test_cube.simulate_step() == active_cubes
-
-
-def run_tasks() -> None:
-    with open("cube.txt") as cube_file:
-        cube_text = cube_file.read()
-
+    def first_task(self, cube_text: str) -> str:
         cube = ConwayCube.from_str(cube_text, 3)
-        print(f"Day 17-1: {cube.active_cubes_after_six_steps()}")
+        return str(cube.active_cubes_after_six_steps())
 
+    def second_task(self, cube_text: str) -> str:
         cube = ConwayCube.from_str(cube_text, 4)
-        print(f"Day 17-2: {cube.active_cubes_after_six_steps()}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(cube.active_cubes_after_six_steps())
