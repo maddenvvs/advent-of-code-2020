@@ -3,6 +3,8 @@ from __future__ import annotations
 from enum import IntEnum
 from typing import Callable, List, Tuple
 
+from .solution import Solution
+
 CELL_VARIATIONS = [".", "L", "#"]
 
 
@@ -127,176 +129,10 @@ class WaitingArea:
         return "\n".join("".join(map(str, line)) for line in self._seats)
 
 
-def test_tasks():
-    test_area_str = """L.LL.LL.LL
-LLLLLLL.LL
-L.L.L..L..
-LLLL.LL.LL
-L.LL.LL.LL
-L.LLLLL.LL
-..L.L.....
-LLLLLLLLLL
-L.LLLLLL.L
-L.LLLLL.LL"""
+class Day11(Solution):
 
-    test_area = WaitingArea.from_string(test_area_str)
-    intolerant_simulation_steps = ["""#.##.##.##
-#######.##
-#.#.#..#..
-####.##.##
-#.##.##.##
-#.#####.##
-..#.#.....
-##########
-#.######.#
-#.#####.##""", """#.LL.L#.##
-#LLLLLL.L#
-L.L.L..L..
-#LLL.LL.L#
-#.LL.LL.LL
-#.LLLL#.##
-..L.L.....
-#LLLLLLLL#
-#.LLLLLL.L
-#.#LLLL.##""", """#.##.L#.##
-#L###LL.L#
-L.#.#..#..
-#L##.##.L#
-#.##.LL.LL
-#.###L#.##
-..#.#.....
-#L######L#
-#.LL###L.L
-#.#L###.##""", """#.#L.L#.##
-#LLL#LL.L#
-L.L.L..#..
-#LLL.##.L#
-#.LL.LL.LL
-#.LL#L#.##
-..L.L.....
-#L#LLLL#L#
-#.LLLLLL.L
-#.#L#L#.##""", """#.#L.L#.##
-#LLL#LL.L#
-L.#.L..#..
-#L##.##.L#
-#.#L.LL.LL
-#.#L#L#.##
-..L.L.....
-#L#L##L#L#
-#.LLLLLL.L
-#.#L#L#.##"""]
+    def first_task(self, seats_text: str) -> str:
+        return str(WaitingArea.from_string(seats_text).intolerant_equilibrium())
 
-    for simulation_map in intolerant_simulation_steps:
-        test_area.simulate_intolerant_step()
-        assert str(test_area) == simulation_map
-
-    assert test_area.intolerant_equilibrium() == 37
-
-    test_visibility_1 = WaitingArea.from_string(""".......#.
-...#.....
-.#.......
-.........
-..#L....#
-....#....
-.........
-#........
-...#.....""")
-    assert test_visibility_1.visible_seats_from(4, 3) == [Cell.OCCUPIED] * 8
-
-    test_visibility_2 = WaitingArea.from_string(""".............
-.L.L.#.#.#.#.
-.............""")
-    assert test_visibility_2.visible_seats_from(1, 1) == [Cell.FREE]
-
-    test_visibility_3 = WaitingArea.from_string(""".##.##.
-#.#.#.#
-##...##
-...L...
-##...##
-#.#.#.#
-.##.##.""")
-    assert test_visibility_3.visible_seats_from(3, 3) == []
-
-    tolerant_area = WaitingArea.from_string(test_area_str)
-    tolerant_simulation_steps = ["""#.##.##.##
-#######.##
-#.#.#..#..
-####.##.##
-#.##.##.##
-#.#####.##
-..#.#.....
-##########
-#.######.#
-#.#####.##""", """#.LL.LL.L#
-#LLLLLL.LL
-L.L.L..L..
-LLLL.LL.LL
-L.LL.LL.LL
-L.LLLLL.LL
-..L.L.....
-LLLLLLLLL#
-#.LLLLLL.L
-#.LLLLL.L#""", """#.L#.##.L#
-#L#####.LL
-L.#.#..#..
-##L#.##.##
-#.##.#L.##
-#.#####.#L
-..#.#.....
-LLL####LL#
-#.L#####.L
-#.L####.L#""", """#.L#.L#.L#
-#LLLLLL.LL
-L.L.L..#..
-##LL.LL.L#
-L.LL.LL.L#
-#.LLLLL.LL
-..L.L.....
-LLLLLLLLL#
-#.LLLLL#.L
-#.L#LL#.L#""", """#.L#.L#.L#
-#LLLLLL.LL
-L.L.L..#..
-##L#.#L.L#
-L.L#.#L.L#
-#.L####.LL
-..#.#.....
-LLL###LLL#
-#.LLLLL#.L
-#.L#LL#.L#""", """#.L#.L#.L#
-#LLLLLL.LL
-L.L.L..#..
-##L#.#L.L#
-L.L#.LL.L#
-#.LLLL#.LL
-..#.L.....
-LLL###LLL#
-#.LLLLL#.L
-#.L#LL#.L#"""]
-
-    for simulation_map in tolerant_simulation_steps:
-        tolerant_area.simulate_tolerant_step()
-        assert str(tolerant_area) == simulation_map
-
-    assert tolerant_area.tolerant_equilibrium() == 26
-
-
-def run_tasks():
-    with open("seats.txt") as seats_file:
-        waiting_area_text = seats_file.read()
-
-        print(
-            f"Day 11-1: {WaitingArea.from_string(waiting_area_text).intolerant_equilibrium()}")
-
-        print(
-            f"Day 11-2: {WaitingArea.from_string(waiting_area_text).tolerant_equilibrium()}")
-
-
-def main():
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+    def second_task(self, seats_text: str) -> str:
+        return str(WaitingArea.from_string(seats_text).tolerant_equilibrium())

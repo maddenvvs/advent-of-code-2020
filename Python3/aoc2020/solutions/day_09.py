@@ -2,6 +2,8 @@ from collections import defaultdict, deque
 from itertools import product
 from typing import Deque, Dict, Generator, List, Optional
 
+from .solution import Solution
+
 
 def parse_cypher(cypher_text: str) -> List[int]:
     return [int(n) for n in cypher_text.splitlines()]
@@ -95,48 +97,14 @@ def find_encryption_weakness_of(cypher: List[int], preamble_len: int = 25) -> Op
     return find_encryption_weakness_value(cypher, incorrect_number)
 
 
-def test_tasks() -> None:
-    test_cypher_text = """35
-20
-15
-25
-47
-40
-62
-55
-65
-95
-102
-117
-150
-182
-127
-219
-299
-277
-309
-576"""
+class Day09(Solution):
 
-    test_cypher = parse_cypher(test_cypher_text)
+    def first_task(self, cypher_text: str) -> str:
+        cypher = parse_cypher(cypher_text)
 
-    assert find_first_incorrect_cypher_number(
-        test_cypher, preamble_len=5) == 127
+        return str(find_first_incorrect_cypher_number(cypher))
 
-    assert find_encryption_weakness_of(test_cypher, preamble_len=5) == 62
+    def second_task(self, cypher_text: str) -> str:
+        cypher = parse_cypher(cypher_text)
 
-
-def run_tasks() -> None:
-    with open("cypher.txt") as cypher_file:
-        cypher = parse_cypher(cypher_file.read())
-
-        print(f"Day 9-1: {find_first_incorrect_cypher_number(cypher)}")
-        print(f"Day 9-2: {find_encryption_weakness_of(cypher)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_encryption_weakness_of(cypher))

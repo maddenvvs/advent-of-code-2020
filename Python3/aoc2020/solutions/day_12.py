@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List
 
+from .solution import Solution
+
 DIRECTIONS = (complex(1, 0), complex(0, 1), complex(-1, 0), complex(0, -1))
 
 
@@ -74,30 +76,14 @@ def simulate_instructions_with_waypoint(instructions: List[Instruction]) -> int:
     return manhattan_distance(position)
 
 
-def test_tasks() -> None:
-    test_instructions_1_text = """F10
-N3
-F7
-R90
-F11"""
+class Day12(Solution):
 
-    test_instructions_1 = parse_instructions(test_instructions_1_text)
-    assert simulate_instructions_with_rotation(test_instructions_1) == 25
-    assert simulate_instructions_with_waypoint(test_instructions_1) == 286
+    def first_task(self, instructions_text: str) -> str:
+        instructions = parse_instructions(instructions_text)
 
+        return str(simulate_instructions_with_rotation(instructions))
 
-def run_tasks() -> None:
-    with open("instructions.txt") as instruction_file:
-        instructions = parse_instructions(instruction_file.read())
+    def second_task(self, instructions_text: str) -> str:
+        instructions = parse_instructions(instructions_text)
 
-        print(f"Day 12-1: {simulate_instructions_with_rotation(instructions)}")
-        print(f"Day 12-2: {simulate_instructions_with_waypoint(instructions)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(simulate_instructions_with_waypoint(instructions))

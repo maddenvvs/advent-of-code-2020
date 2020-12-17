@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Generator, List, Optional, Sequence, Tuple
 
+from .solution import Solution
+
 
 @dataclass
 class Command:
@@ -93,35 +95,14 @@ def find_acc_value_in_correct_program(lines: Sequence[Command]) -> Optional[int]
     return None
 
 
-def test_tasks() -> None:
-    test_program_text = """nop +0
-acc +1
-jmp +4
-acc +3
-jmp -3
-acc -99
-acc +1
-jmp -4
-acc +6"""
+class Day08(Solution):
 
-    program = parse_program(test_program_text)
+    def first_task(self, program_text: str) -> str:
+        program = parse_program(program_text)
 
-    assert find_acc_value_before_entering_loop(program) == 5
-    assert find_acc_value_in_correct_program(program) == 8
+        return str(find_acc_value_before_entering_loop(program))
 
+    def second_task(self, program_text: str) -> str:
+        program = parse_program(program_text)
 
-def run_tasks() -> None:
-    with open("program.txt") as program_file:
-        program = parse_program(program_file.read())
-
-        print(f"Day 8-1: {find_acc_value_before_entering_loop(program)}")
-        print(f"Day 8-2: {find_acc_value_in_correct_program(program)}")
-
-
-def main() -> None:
-    test_tasks()
-    run_tasks()
-
-
-if __name__ == "__main__":
-    main()
+        return str(find_acc_value_in_correct_program(program))
