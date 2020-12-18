@@ -1,6 +1,6 @@
 use super::solution::{Error, Solution};
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 enum Token {
     OpenBracket,
     CloseBracket,
