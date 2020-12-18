@@ -39,14 +39,14 @@ fn available_solutions() -> Vec<Box<dyn solution::Solution>> {
     ]
 }
 
-fn read_problem_input(filename: &Option<String>) -> io::Result<String> {
+fn read_problem_input(filename: &str) -> io::Result<String> {
     match filename {
-        Some(filename) => fs::read_to_string(filename),
-        None => {
+        "-" => {
             let mut buffer = String::new();
             io::stdin().read_to_string(&mut buffer)?;
             Ok(buffer)
         }
+        filename => fs::read_to_string(filename),
     }
 }
 

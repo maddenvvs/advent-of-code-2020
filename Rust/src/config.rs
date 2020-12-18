@@ -8,8 +8,9 @@ pub struct Opts {
     #[clap(validator(is_day_valid))]
     pub day: u8,
 
-    /// Input file containing input data provided by Advent of Code
-    pub file: Option<String>,
+    /// Input file containing input data provided by Advent of Code.
+    /// Accept "-" as a special file that refers to stdin.
+    pub file: String,
 }
 
 fn is_day_valid(val: &str) -> Result<(), String> {
