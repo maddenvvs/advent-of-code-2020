@@ -15,9 +15,10 @@ from .day_14 import Day14
 from .day_15 import Day15
 from .day_16 import Day16
 from .day_17 import Day17
+from .day_18 import Day18
 
 all_solutions = [Day01, Day02, Day03, Day04,
                  Day05, Day06, Day07, Day08,
                  Day09, Day10, Day11, Day12,
                  Day13, Day14, Day15, Day16,
-                 Day17]
+                 Day17, Day18]
