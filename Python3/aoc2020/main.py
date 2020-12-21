@@ -24,10 +24,7 @@ def cli(day: int, file: TextIO):
         click.echo(f"There is no solution for day {day} yet. Stay tuned!")
         return
 
-    try:
-        file_content = file.read()
+    file_content = file.read()
 
-        click.echo(f"Day {day}-1: {solution.first_task(file_content)}")
-        click.echo(f"Day {day}-2: {solution.second_task(file_content)}")
-    except Exception as e:
-        raise click.ClickException(f"Application error: {e}")
+    click.echo(f"Day {day}-1: {solution.first_task(file_content)}")
+    click.echo(f"Day {day}-2: {solution.second_task(file_content)}")
