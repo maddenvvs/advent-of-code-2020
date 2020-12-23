@@ -7,6 +7,27 @@ from .solution import Solution
 T = TypeVar("T")
 
 
+class ClassyDoublyLinkedList:
+    __slots__ = "prev", "next"
+
+    def __init__(self, size: int):
+        self.next = [i+1 for i in range(size)]
+        self.prev = [i-1 for i in range(size)]
+
+        self.next[-1] = 0
+        self.prev[0] = size-1
+
+    def remove_node(self, node: int):
+        self.next[self.prev[node]] = self.next[node]
+        self.prev[self.next[node]] = self.prev[node]
+
+    def insert_after(self, after: int, node: int):
+        self.next[node] = self.next[after]
+        self.next[after] = node
+        self.prev[self.next[node]] = node
+        self.prev[node] = after
+
+
 class Node(Generic[T]):
     __slots__ = "value", "_next", "_prev"
 
@@ -110,6 +131,53 @@ def parse_cups(cups_text: str) -> List[int]:
     return [int(c, base=10) for c in cups_text]
 
 
+def simulate_game_classy_way(cups: List[int], moves: int) -> List[int]:
+    linked_list = ClassyDoublyLinkedList(len(cups))
+    val2node = [0 for _ in range(len(cups))]
+
+    for i, cup in enumerate(cups):
+        val2node[cup-1] = i
+
+    curr_node = 0
+
+    for _ in range(moves):
+        removed_nodes = (
+            linked_list.next[curr_node],
+            linked_list.next[linked_list.next[curr_node]],
+            linked_list.next[linked_list.next[linked_list.next[curr_node]]],
+        )
+
+        for node in removed_nodes:
+            linked_list.remove_node(node)
+
+        value_to_append_after = cups[curr_node] - 1
+        if value_to_append_after == 0:
+            value_to_append_after = len(cups)
+
+        while value_to_append_after == cups[removed_nodes[0]] \
+                or value_to_append_after == cups[removed_nodes[1]] \
+                or value_to_append_after == cups[removed_nodes[2]]:
+            value_to_append_after -= 1
+            if value_to_append_after == 0:
+                value_to_append_after = len(cups)
+
+        node_to_insert_after = val2node[value_to_append_after - 1]
+        for node in removed_nodes:
+            linked_list.insert_after(node_to_insert_after, node)
+            node_to_insert_after = node
+
+        curr_node = linked_list.next[curr_node]
+
+    new_cups = [0 for _ in range(len(cups))]
+    next_node = 0
+
+    for i in range(len(cups)):
+        new_cups[i] = cups[next_node]
+        next_node = linked_list.next[next_node]
+
+    return new_cups
+
+
 def simulate_game(cups: List[int], moves: int) -> List[int]:
     linked_list = DoublyLinkedList[int]()
     val2node = {}
@@ -157,14 +225,14 @@ def find_1_based_label(cups: List[int]) -> str:
 
 
 def count_1_based_label_after(cups: List[int], moves: int) -> str:
-    new_cups = simulate_game(cups, moves)
+    new_cups = simulate_game_classy_way(cups, moves)
 
     return find_1_based_label(new_cups)
 
 
 def count_product_of_two_labels_after_1(cups: List[int]) -> int:
     all_cups = cups + list(range(len(cups) + 1, 1_000_001))
-    new_cups = simulate_game(all_cups, 10_000_000)
+    new_cups = simulate_game_classy_way(all_cups, 10_000_000)
     one_idx = new_cups.index(1)
 
     return new_cups[(one_idx + 1) % len(new_cups)] * new_cups[(one_idx + 2) % len(new_cups)]
