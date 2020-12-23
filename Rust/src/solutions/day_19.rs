@@ -10,7 +10,7 @@ enum Match {
 }
 
 impl Match {
-    fn try_match(&self, message: &Vec<char>, idx: usize, rules: &Rules) -> Vec<usize> {
+    fn try_match(&self, message: &[char], idx: usize, rules: &Rules) -> Vec<usize> {
         use Match::*;
 
         if idx >= message.len() {
@@ -122,7 +122,7 @@ fn parse_definition(definition_text: &str) -> Match {
         };
     }
 
-    if parts[0].starts_with("\"") {
+    if parts[0].starts_with('\"') {
         return Match::Letter {
             letter: parts[0].chars().nth(1).unwrap(),
         };
@@ -158,7 +158,7 @@ fn parse_input_messages(input_messages: &str) -> (Rules, Vec<&str>) {
     (rules, messages)
 }
 
-fn count_messages_match_rule_0(rules: &Rules, messages: &Vec<&str>) -> usize {
+fn count_messages_match_rule_0(rules: &Rules, messages: &[&str]) -> usize {
     messages.iter().filter(|m| rules.matches_rule(m, 0)).count()
 }
 

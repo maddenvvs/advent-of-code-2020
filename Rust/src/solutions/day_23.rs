@@ -38,7 +38,7 @@ fn parse_cups(cups_text: &str) -> Vec<u32> {
     cups_text.chars().map(|c| c.to_digit(10).unwrap()).collect()
 }
 
-fn simulate_game(cups: &Vec<u32>, moves: u32) -> Vec<u32> {
+fn simulate_game(cups: &[u32], moves: u32) -> Vec<u32> {
     let mut linked_list: DoublyLinkedList = DoublyLinkedList::new(cups.len());
     let mut val2node = vec![0; cups.len()];
 
@@ -86,15 +86,15 @@ fn simulate_game(cups: &Vec<u32>, moves: u32) -> Vec<u32> {
     let mut new_cups = vec![0; cups.len()];
     let mut next_node = 0;
 
-    for i in 0..cups.len() {
-        new_cups[i] = cups[next_node];
+    for new_cup in new_cups.iter_mut().take(cups.len()) {
+        *new_cup = cups[next_node];
         next_node = linked_list.next[next_node];
     }
 
     new_cups
 }
 
-fn find_1_based_label(cups: &Vec<u32>) -> String {
+fn find_1_based_label(cups: &[u32]) -> String {
     let one_idx = cups.iter().position(|&v| v == 1).unwrap();
     let mut label = String::new();
 
@@ -105,21 +105,26 @@ fn find_1_based_label(cups: &Vec<u32>) -> String {
     label
 }
 
-fn count_1_based_label_after(cups: &Vec<u32>, moves: u32) -> String {
+fn count_1_based_label_after(cups: &[u32], moves: u32) -> String {
     let new_cups = simulate_game(cups, moves);
 
     find_1_based_label(&new_cups)
 }
 
-fn count_product_of_two_labels_after_1(cups: &Vec<u32>) -> u64 {
+fn count_product_of_two_labels_after_1(cups: &[u32]) -> u64 {
     let mut all_cups = vec![0; 1_000_000];
 
     for (i, &cup) in cups.iter().enumerate() {
         all_cups[i] = cup;
     }
 
-    for i in cups.len()..1_000_000 {
-        all_cups[i] = (i + 1) as u32;
+    for (i, val) in all_cups
+        .iter_mut()
+        .enumerate()
+        .take(1_000_000)
+        .skip(cups.len())
+    {
+        *val = (i + 1) as u32;
     }
 
     let new_cups = simulate_game(&all_cups, 10_000_000);

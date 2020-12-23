@@ -60,9 +60,9 @@ impl Image {
     fn clone(&self) -> Image {
         let mut image = create_square_grid(self.size());
 
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                image[r][c] = self.image[r][c];
+        for (r, row) in image.iter_mut().enumerate().take(self.size()) {
+            for (c, chr) in row.iter_mut().enumerate().take(self.size()) {
+                *chr = self.image[r][c];
             }
         }
 
@@ -72,9 +72,9 @@ impl Image {
     fn rotate_clockwise(&self) -> Image {
         let mut image = create_square_grid(self.size());
 
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                image[r][c] = self.image[self.size() - c - 1][r];
+        for (r, row) in image.iter_mut().enumerate().take(self.size()) {
+            for (c, chr) in row.iter_mut().enumerate().take(self.size()) {
+                *chr = self.image[self.size() - c - 1][r];
             }
         }
 
@@ -84,9 +84,9 @@ impl Image {
     fn flip_horizontally(&self) -> Image {
         let mut image = create_square_grid(self.size());
 
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                image[r][c] = self.image[self.size() - r - 1][c];
+        for (r, row) in image.iter_mut().enumerate().take(self.size()) {
+            for (c, chr) in row.iter_mut().enumerate().take(self.size()) {
+                *chr = self.image[self.size() - r - 1][c];
             }
         }
 
@@ -96,9 +96,9 @@ impl Image {
     fn flip_vertically(&self) -> Image {
         let mut image = create_square_grid(self.size());
 
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                image[r][c] = self.image[r][self.size() - c - 1];
+        for (r, row) in image.iter_mut().enumerate().take(self.size()) {
+            for (c, chr) in row.iter_mut().enumerate().take(self.size()) {
+                *chr = self.image[r][self.size() - c - 1];
             }
         }
 
@@ -156,10 +156,10 @@ impl Tile {
         self.image
             .possible_images()
             .iter()
-            .flat_map(|img| img.borders().iter().map(|&el| el).collect::<Vec<usize>>())
+            .flat_map(|img| img.borders().iter().copied().collect::<Vec<usize>>())
             .collect::<HashSet<usize>>()
             .iter()
-            .map(|&el| el)
+            .copied()
             .collect::<Vec<usize>>()
     }
 
@@ -173,7 +173,7 @@ impl Tile {
             .next()
             .unwrap()
             .trim_start_matches("Tile ")
-            .trim_end_matches(":")
+            .trim_end_matches(':')
             .parse::<usize>()
             .unwrap();
 
@@ -192,12 +192,12 @@ struct Arrangement {
     grid: Grid<Tile>,
 }
 
-fn collect_border2tiles(tiles: &Vec<Tile>) -> Border2Tiles {
+fn collect_border2tiles(tiles: &[Tile]) -> Border2Tiles {
     let mut border2tiles: Border2Tiles = HashMap::new();
 
     for tile in tiles {
         for border in tile.unique_border_sides() {
-            let entry = border2tiles.entry(border).or_insert(HashSet::new());
+            let entry = border2tiles.entry(border).or_insert_with(HashSet::new);
 
             entry.insert(&tile);
         }
@@ -220,14 +220,14 @@ fn recover_tile_graph<'a>(border2tiles: &'a Border2Tiles) -> ArrangementGraph<'a
 
         let first_entry = graph
             .entry(*first)
-            .or_insert(HashMap::new())
+            .or_insert_with(HashMap::new)
             .entry(*second)
             .or_insert(vec![]);
         first_entry.push(*side);
 
         let second_entry = graph
             .entry(*second)
-            .or_insert(HashMap::new())
+            .or_insert_with(HashMap::new)
             .entry(*first)
             .or_insert(vec![]);
         second_entry.push(*side);
@@ -379,17 +379,17 @@ fn recover_from_tiles(size: usize, tiles: Vec<Tile>) -> Grid<Tile> {
     let graph = recover_tile_graph(&border2tiles);
     let border_tiles = find_corner_tiles(&border2tiles);
 
-    return recover_arrangement_grid(size, border_tiles[0], &graph);
+    recover_arrangement_grid(size, border_tiles[0], &graph)
 }
 
 impl Arrangement {
     fn find_corner_tiles(&self) -> [usize; 4] {
-        return [
+        [
             self.grid[0][0].id,
             self.grid[0][self.grid.len() - 1].id,
             self.grid[self.grid.len() - 1][self.grid.len() - 1].id,
             self.grid[self.grid.len() - 1][0].id,
-        ];
+        ]
     }
 
     fn recover_original_image(&self) -> Image {
@@ -409,7 +409,7 @@ impl Arrangement {
             }
         }
 
-        return big_tile_image;
+        big_tile_image
     }
 
     fn from_str(tiles_text: &str) -> Arrangement {
@@ -502,7 +502,7 @@ fn count_hashes_in(image: &Image) -> usize {
     image
         .image
         .iter()
-        .flat_map(|row| row)
+        .flatten()
         .filter(|&&el| el == '#')
         .count()
 }

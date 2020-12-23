@@ -76,16 +76,16 @@ fn add_point(
     state: &mut HashSet<Vec<i32>>,
     neighbours: &mut HashMap<Vec<i32>, i32>,
     dimensions: usize,
-    point: &Vec<i32>,
+    point: &[i32],
 ) {
-    state.insert(point.clone());
+    state.insert(point.to_vec());
 
     for neighbour in neighbour_cubes(&point, dimensions) {
         *neighbours.entry(neighbour).or_insert(0) += 1;
     }
 }
 
-fn neighbour_cubes(point: &Vec<i32>, dimensions: usize) -> Vec<Vec<i32>> {
+fn neighbour_cubes(point: &[i32], dimensions: usize) -> Vec<Vec<i32>> {
     let mut neighbours = vec![];
 
     match dimensions {

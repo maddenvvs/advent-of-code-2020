@@ -62,7 +62,7 @@ fn try_swallow(stack: &mut Vec<Token>, value: Token) {
     stack.push(value);
 }
 
-fn evaluate_expression(expression: &Vec<Token>) -> Result<u64, &str> {
+fn evaluate_expression(expression: &[Token]) -> Result<u64, &str> {
     use Token::*;
 
     let mut stack: Vec<Token> = vec![];
@@ -100,7 +100,7 @@ fn simplify(stack: &mut Vec<Token>) {
     try_swallow_advanced(stack, &|t: &Token| t.is_operation())
 }
 
-fn evaluate_expression_advanced(expression: &Vec<Token>) -> Result<u64, &str> {
+fn evaluate_expression_advanced(expression: &[Token]) -> Result<u64, &str> {
     use Token::*;
 
     let mut stack: Vec<Token> = vec![];
@@ -136,14 +136,14 @@ fn evaluate_expression_advanced(expression: &Vec<Token>) -> Result<u64, &str> {
     Err("Incorrect expression")
 }
 
-fn sum_of_expressions(expressions: &Vec<Vec<Token>>) -> u64 {
+fn sum_of_expressions(expressions: &[Vec<Token>]) -> u64 {
     expressions
         .iter()
         .map(|e| evaluate_expression(e).unwrap())
         .sum::<u64>()
 }
 
-fn sum_of_expressions_advanced(expressions: &Vec<Vec<Token>>) -> u64 {
+fn sum_of_expressions_advanced(expressions: &[Vec<Token>]) -> u64 {
     expressions
         .iter()
         .map(|e| evaluate_expression_advanced(e).unwrap())

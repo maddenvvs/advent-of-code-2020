@@ -1,3 +1,5 @@
+#![warn(clippy::all)]
+
 pub mod config;
 use config::Opts;
 

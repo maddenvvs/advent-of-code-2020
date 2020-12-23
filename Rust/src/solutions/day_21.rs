@@ -10,7 +10,7 @@ impl Food<'_> {
     fn new(s: &str) -> Food {
         let mut parts = s.split(" (contains ");
         let ingredients_text = parts.next().unwrap();
-        let allergens_text = parts.next().unwrap().trim_end_matches(")");
+        let allergens_text = parts.next().unwrap().trim_end_matches(')');
 
         Food {
             ingredients: ingredients_text.split_whitespace().collect(),
@@ -89,29 +89,29 @@ fn parse_food_list(foods_text: &str) -> Vec<Food> {
     foods_text.lines().map(Food::new).collect()
 }
 
-fn find_allergen_candidates<'a>(food_list: &Vec<Food<'a>>) -> HashMap<&'a str, HashSet<&'a str>> {
+fn find_allergen_candidates<'a>(food_list: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     let all_ingredients: HashSet<&str> = food_list
         .iter()
         .flat_map(|f| &f.ingredients)
-        .map(|&el| el)
+        .copied()
         .collect();
 
     let mut allergen_candidates: HashMap<&str, HashSet<&str>> = HashMap::new();
     for food in food_list.iter() {
-        let food_ingredients: HashSet<&str> = food.ingredients.iter().map(|&el| el).collect();
+        let food_ingredients: HashSet<&str> = food.ingredients.iter().copied().collect();
 
         for allergen in food.allergens.iter() {
             let val = allergen_candidates
                 .entry(allergen)
-                .or_insert(HashSet::new());
+                .or_insert_with(HashSet::new);
 
             if val.is_empty() {
                 *val = all_ingredients
                     .intersection(&food_ingredients)
-                    .map(|&el| el)
+                    .copied()
                     .collect();
             } else {
-                *val = val.intersection(&food_ingredients).map(|&el| el).collect();
+                *val = val.intersection(&food_ingredients).copied().collect();
             }
         }
     }
@@ -119,12 +119,10 @@ fn find_allergen_candidates<'a>(food_list: &Vec<Food<'a>>) -> HashMap<&'a str, H
     allergen_candidates
 }
 
-fn count_allergen_free_ingredients(food_list: &Vec<Food>) -> usize {
+fn count_allergen_free_ingredients(food_list: &[Food]) -> usize {
     let possible_allergens: HashSet<&str> = find_allergen_candidates(food_list)
         .values()
-        .fold(HashSet::new(), |acc, el| {
-            acc.union(el).map(|&el| el).collect()
-        });
+        .fold(HashSet::new(), |acc, el| acc.union(el).copied().collect());
 
     food_list
         .iter()
@@ -133,7 +131,7 @@ fn count_allergen_free_ingredients(food_list: &Vec<Food>) -> usize {
         .count()
 }
 
-fn find_allergen_list(food_list: &Vec<Food>) -> String {
+fn find_allergen_list(food_list: &[Food]) -> String {
     let allergen_candidates = find_allergen_candidates(food_list);
     let mut graph = Graph::new();
 
@@ -144,7 +142,7 @@ fn find_allergen_list(food_list: &Vec<Food>) -> String {
     }
 
     let matching = graph.find_matching_using_kuhn_algorithm();
-    let mut foreign_allergens: Vec<&str> = allergen_candidates.keys().map(|&el| el).collect();
+    let mut foreign_allergens: Vec<&str> = allergen_candidates.keys().copied().collect();
     foreign_allergens.sort_unstable();
 
     foreign_allergens
