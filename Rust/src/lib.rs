@@ -4,39 +4,38 @@ pub mod config;
 use config::Opts;
 
 mod solutions;
-use solutions::no_solution::NoSolution;
 use solutions::*;
 
 use std::error::Error;
 use std::fs;
 use std::io::{self, Read};
 
-fn available_solutions() -> Vec<Box<dyn solution::Solution>> {
+fn available_solutions() -> Vec<Box<dyn Solution>> {
     vec![
-        Box::new(day_01::Day01 {}),
-        Box::new(day_02::Day02 {}),
-        Box::new(day_03::Day03 {}),
-        Box::new(day_04::Day04 {}),
-        Box::new(day_05::Day05 {}),
-        Box::new(day_06::Day06 {}),
-        Box::new(day_07::Day07 {}),
-        Box::new(day_08::Day08 {}),
-        Box::new(day_09::Day09 {}),
-        Box::new(day_10::Day10 {}),
-        Box::new(day_11::Day11 {}),
-        Box::new(day_12::Day12 {}),
-        Box::new(day_13::Day13 {}),
-        Box::new(day_14::Day14 {}),
-        Box::new(day_15::Day15 {}),
-        Box::new(day_16::Day16 {}),
-        Box::new(day_17::Day17 {}),
-        Box::new(day_18::Day18 {}),
-        Box::new(day_19::Day19 {}),
-        Box::new(day_20::Day20 {}),
-        Box::new(day_21::Day21 {}),
-        Box::new(day_22::Day22 {}),
-        Box::new(day_23::Day23 {}),
-        Box::new(day_24::Day24 {}),
+        Box::new(Day01 {}),
+        Box::new(Day02 {}),
+        Box::new(Day03 {}),
+        Box::new(Day04 {}),
+        Box::new(Day05 {}),
+        Box::new(Day06 {}),
+        Box::new(Day07 {}),
+        Box::new(Day08 {}),
+        Box::new(Day09 {}),
+        Box::new(Day10 {}),
+        Box::new(Day11 {}),
+        Box::new(Day12 {}),
+        Box::new(Day13 {}),
+        Box::new(Day14 {}),
+        Box::new(Day15 {}),
+        Box::new(Day16 {}),
+        Box::new(Day17 {}),
+        Box::new(Day18 {}),
+        Box::new(Day19 {}),
+        Box::new(Day20 {}),
+        Box::new(Day21 {}),
+        Box::new(Day22 {}),
+        Box::new(Day23 {}),
+        Box::new(Day24 {}),
         Box::new(NoSolution),
     ]
 }
