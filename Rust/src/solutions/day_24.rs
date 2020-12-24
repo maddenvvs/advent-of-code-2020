@@ -4,55 +4,52 @@ use std::collections::{HashMap, HashSet};
 
 type Point = Complex<i32>;
 
+static OFFSETS: [Point; 6] = [
+    Point::new(-2, 0),
+    Point::new(2, 0),
+    Point::new(-1, -3),
+    Point::new(-1, 3),
+    Point::new(1, -3),
+    Point::new(1, 3),
+];
+
 fn add_point(neighbours: &mut HashMap<Point, usize>, point: Point) {
-    for offset in &[
-        Point::new(-2, 0),
-        Point::new(2, 0),
-        Point::new(-1, -3),
-        Point::new(-1, 3),
-        Point::new(1, -3),
-        Point::new(1, 3),
-    ] {
+    for offset in OFFSETS.iter() {
         *neighbours.entry(point + offset).or_insert(0) += 1;
     }
 }
 
 fn result_position(instructions: &str) -> Point {
     let mut position = Point::new(0, 0);
-    let mut idx: usize = 0;
-    let chars: Vec<char> = instructions.chars().collect();
+    let mut chars = instructions.chars();
 
-    while idx < chars.len() {
-        match chars[idx] {
-            'e' => {
+    loop {
+        match chars.next() {
+            Some('e') => {
                 position += Point::new(-2, 0);
-                idx += 1;
             }
-            'w' => {
+            Some('w') => {
                 position += Point::new(2, 0);
-                idx += 1;
             }
-            'n' => {
-                if chars[idx + 1] == 'e' {
+            Some('n') => {
+                if let Some('e') = chars.next() {
                     position += Point::new(-1, 3);
                 } else {
                     position += Point::new(1, 3);
                 }
-                idx += 2;
             }
-            's' => {
-                if chars[idx + 1] == 'e' {
+            Some('s') => {
+                if let Some('e') = chars.next() {
                     position += Point::new(-1, -3);
                 } else {
                     position += Point::new(1, -3);
                 }
-                idx += 2;
             }
-            i => panic!("Unsupported instruction: {}", i),
+            Some(n) => panic!("Unsupported instruction: {}", n),
+
+            None => return position,
         };
     }
-
-    position
 }
 
 struct TileFloor {
@@ -113,6 +110,7 @@ impl TileFloor {
 
         std::mem::swap(&mut self.floor, &mut self.buffer);
         std::mem::swap(&mut self.neighbours, &mut self.buffer_neighbours);
+
         black_tiles
     }
 }
