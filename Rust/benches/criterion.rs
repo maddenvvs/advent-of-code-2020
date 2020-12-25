@@ -13,6 +13,17 @@ pub fn day01(c: &mut Criterion) {
     });
 }
 
+pub fn day22(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-22.input").unwrap();
+    let day = Day22 {};
+    c.bench_function("Day 22 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 22 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
 pub fn day23(c: &mut Criterion) {
     let input = fs::read_to_string("../input/day-23.input").unwrap();
     let day = Day23 {};
@@ -48,7 +59,9 @@ pub fn day25(c: &mut Criterion) {
 
 criterion_group!(
     benches, // day01,
-    day24,
+    day22,
+    // day23,
+    // day24,
     // day25,
 );
 criterion_main!(benches);
