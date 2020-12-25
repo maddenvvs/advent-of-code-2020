@@ -1,4 +1,3 @@
-mod no_solution;
 mod solution;
 
 mod day_01;
@@ -27,7 +26,6 @@ mod day_23;
 mod day_24;
 mod day_25;
 
-pub use no_solution::NoSolution;
 pub use solution::*;
 
 pub use day_01::Day01;
