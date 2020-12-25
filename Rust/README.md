@@ -1,4 +1,4 @@
-# 🎄⭐️[Advent of Code 2020](https://adventofcode.com/2020)
+# 🎄⭐️ [Advent of Code 2020](https://adventofcode.com/2020)
 ### Solutions in 🦀[Rust](https://www.rust-lang.org/)
 
 This project builds with [Cargo](https://docs.rust-lang.org/cargo).
