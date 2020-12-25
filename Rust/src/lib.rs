@@ -4,7 +4,7 @@ pub mod config;
 use config::Opts;
 
 mod solutions;
-use solutions::*;
+pub use solutions::*;
 
 use std::error::Error;
 use std::fs;

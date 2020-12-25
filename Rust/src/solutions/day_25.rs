@@ -1,32 +1,28 @@
 use super::solution::{Error, Solution};
+use itertools::Itertools;
 
 const MODULO: u64 = 20201227;
 
 fn parse_public_keys(keys_text: &str) -> (u64, u64) {
-    let mut lines = keys_text.lines();
-
-    (
-        lines.next().unwrap().parse().unwrap(),
-        lines.next().unwrap().parse().unwrap(),
-    )
+    keys_text
+        .lines()
+        .map(|line| line.parse().unwrap())
+        .collect_tuple()
+        .unwrap()
 }
 
-fn find_loop_size(public_key: u64) -> u64 {
-    let mut subject_number = 7_u64;
-    let mut loop_size = 1_u64;
-
-    while subject_number != public_key {
-        subject_number = (subject_number * 7_u64) % MODULO;
-        loop_size += 1;
-    }
-
-    loop_size
+fn transforms(subject: u64) -> impl Iterator<Item = u64> {
+    itertools::iterate(subject, move |current| current * subject % MODULO)
 }
 
-fn find_encryption_key(door_public_key: u64, key_public_key: u64) -> u64 {
+fn find_loop_size(public_key: u64) -> usize {
+    transforms(7).position(|v| v == public_key).unwrap()
+}
+
+fn find_encryption_key(door_public_key: u64, card_public_key: u64) -> u64 {
     let loop_size = find_loop_size(door_public_key);
 
-    (0..loop_size - 1).fold(key_public_key, |acc, _| acc * key_public_key % MODULO)
+    transforms(card_public_key).nth(loop_size).unwrap()
 }
 
 pub struct Day25 {}
@@ -49,12 +45,12 @@ mod tests {
 
     #[test]
     fn test_find_loop_size() {
-        assert_eq!(find_loop_size(5764801_u64), 8_u64);
-        assert_eq!(find_loop_size(17807724_u64), 11_u64);
+        assert_eq!(find_loop_size(5764801), 7);
+        assert_eq!(find_loop_size(17807724), 10);
     }
 
     #[test]
     fn test_first_task() {
-        assert_eq!(find_encryption_key(5764801_u64, 17807724_u64), 14897079_u64);
+        assert_eq!(find_encryption_key(5764801, 17807724), 14897079);
     }
 }
