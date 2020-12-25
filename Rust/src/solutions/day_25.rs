@@ -1,8 +1,6 @@
 use super::solution::{Error, Solution};
 use itertools::Itertools;
 
-const MODULO: u64 = 20201227;
-
 fn parse_public_keys(keys_text: &str) -> (u64, u64) {
     keys_text
         .lines()
@@ -12,6 +10,8 @@ fn parse_public_keys(keys_text: &str) -> (u64, u64) {
 }
 
 fn transforms(subject: u64) -> impl Iterator<Item = u64> {
+    const MODULO: u64 = 20201227;
+
     itertools::iterate(subject, move |current| current * subject % MODULO)
 }
 

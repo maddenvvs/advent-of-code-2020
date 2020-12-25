@@ -13,12 +13,6 @@ static OFFSETS: [Point; 6] = [
     Point::new(1, 3),
 ];
 
-fn add_point(neighbours: &mut HashMap<Point, usize>, point: Point) {
-    for offset in OFFSETS.iter() {
-        *neighbours.entry(point + offset).or_insert(0) += 1;
-    }
-}
-
 fn result_position(instructions: &str) -> Point {
     let mut position = Point::new(0, 0);
     let mut chars = instructions.chars();
@@ -76,7 +70,9 @@ impl TileFloor {
 
         let mut neighbours: HashMap<Point, usize> = HashMap::new();
         for &point in floor.iter() {
-            add_point(&mut neighbours, point);
+            for offset in OFFSETS.iter() {
+                *neighbours.entry(point + offset).or_insert(0) += 1;
+            }
         }
 
         TileFloor {
@@ -98,13 +94,13 @@ impl TileFloor {
 
         for (&point, &active_neighbours) in self.neighbours.iter() {
             let is_black = self.floor.contains(&point);
-            if (is_black && 1 <= active_neighbours && active_neighbours <= 2)
-                || (!is_black && active_neighbours == 2)
-            {
+            if (is_black && active_neighbours == 1) || (active_neighbours == 2) {
                 black_tiles += 1;
 
                 self.buffer.insert(point);
-                add_point(&mut self.buffer_neighbours, point);
+                for offset in OFFSETS.iter() {
+                    *self.buffer_neighbours.entry(point + offset).or_insert(0) += 1;
+                }
             }
         }
 

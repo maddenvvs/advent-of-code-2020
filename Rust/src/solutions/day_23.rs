@@ -1,137 +1,79 @@
 use super::solution::{Error, Solution};
 
-pub struct DoublyLinkedList {
-    prev: Vec<usize>,
-    next: Vec<usize>,
+fn parse_cups(cups_text: &str) -> Vec<usize> {
+    cups_text
+        .chars()
+        .map(|c| c.to_digit(10).map(|c| c as usize).unwrap())
+        .collect()
 }
 
-impl DoublyLinkedList {
-    pub fn new(size: usize) -> Self {
-        let mut prev = vec![0; size];
-        let mut next = vec![0; size];
-
-        for idx in 1..size {
-            next[idx - 1] = idx;
-            prev[idx] = idx - 1;
-        }
-
-        next[size - 1] = 0;
-        prev[0] = size - 1;
-
-        Self { prev, next }
-    }
-
-    fn remove_node(&mut self, node: usize) {
-        self.next[self.prev[node]] = self.next[node];
-        self.prev[self.next[node]] = self.prev[node];
-    }
-
-    fn insert_after(&mut self, after: usize, node: usize) {
-        self.next[node] = self.next[after];
-        self.next[after] = node;
-        self.prev[self.next[node]] = node;
-        self.prev[node] = after;
-    }
+fn build_cups_buffer(cups: &[usize], size: usize) -> Vec<usize> {
+    let mut buffer = vec![0; size + 1];
+    let last = (1..size).fold(cups[0], |curr, i| {
+        buffer[curr] = if i < cups.len() { cups[i] } else { i + 1 };
+        buffer[curr]
+    });
+    buffer[last] = cups[0];
+    buffer
 }
 
-fn parse_cups(cups_text: &str) -> Vec<u32> {
-    cups_text.chars().map(|c| c.to_digit(10).unwrap()).collect()
+fn simulate_move(cups_buffer: &mut [usize], current_cup: usize) -> usize {
+    let size = cups_buffer.len() - 1;
+    let (a, b, c) = (
+        cups_buffer[current_cup],
+        cups_buffer[cups_buffer[current_cup]],
+        cups_buffer[cups_buffer[cups_buffer[current_cup]]],
+    );
+
+    let mut destination = if current_cup == 1 {
+        size
+    } else {
+        current_cup - 1
+    };
+
+    while destination == a || destination == b || destination == c {
+        destination = if destination == 1 {
+            size
+        } else {
+            destination - 1
+        };
+    }
+
+    cups_buffer[current_cup] = cups_buffer[c];
+    cups_buffer[c] = cups_buffer[destination];
+    cups_buffer[destination] = a;
+
+    cups_buffer[current_cup]
 }
 
-fn simulate_game(cups: &[u32], moves: u32) -> Vec<u32> {
-    let mut linked_list: DoublyLinkedList = DoublyLinkedList::new(cups.len());
-    let mut val2node = vec![0; cups.len()];
-
-    for (i, cup) in cups.iter().enumerate() {
-        val2node[(*cup - 1) as usize] = i;
-    }
-
-    let mut curr_node = 0;
-
-    for _ in 0..moves {
-        let removed_nodes = [
-            linked_list.next[curr_node],
-            linked_list.next[linked_list.next[curr_node]],
-            linked_list.next[linked_list.next[linked_list.next[curr_node]]],
-        ];
-
-        for &val in &removed_nodes {
-            linked_list.remove_node(val);
-        }
-
-        let mut value_to_append_after = cups[curr_node] - 1;
-        if value_to_append_after == 0 {
-            value_to_append_after = cups.len() as u32;
-        }
-
-        while value_to_append_after == cups[removed_nodes[0]]
-            || value_to_append_after == cups[removed_nodes[1]]
-            || value_to_append_after == cups[removed_nodes[2]]
-        {
-            value_to_append_after -= 1;
-            if value_to_append_after == 0 {
-                value_to_append_after = cups.len() as u32;
-            }
-        }
-
-        let mut node_to_insert_after = val2node[(value_to_append_after - 1) as usize];
-        for &node in &removed_nodes {
-            linked_list.insert_after(node_to_insert_after, node);
-            node_to_insert_after = node;
-        }
-
-        curr_node = linked_list.next[curr_node];
-    }
-
-    let mut new_cups = vec![0; cups.len()];
-    let mut next_node = 0;
-
-    for new_cup in new_cups.iter_mut().take(cups.len()) {
-        *new_cup = cups[next_node];
-        next_node = linked_list.next[next_node];
-    }
-
-    new_cups
+fn simulate_game(start_cup: usize, buffer: &mut [usize], moves: usize) {
+    (0..moves).fold(start_cup, |curr, _| simulate_move(buffer, curr));
 }
 
-fn find_1_based_label(cups: &[u32]) -> String {
-    let one_idx = cups.iter().position(|&v| v == 1).unwrap();
+fn find_1_based_label(buffer: &[usize]) -> String {
+    let mut one_idx = 1;
     let mut label = String::new();
 
-    for i in 1..cups.len() {
-        label.push_str(&cups[(one_idx + i) % cups.len()].to_string());
+    for _i in 1..buffer.len() - 1 {
+        label.push_str(&buffer[one_idx].to_string());
+        one_idx = buffer[one_idx];
     }
 
     label
 }
 
-fn count_1_based_label_after(cups: &[u32], moves: u32) -> String {
-    let new_cups = simulate_game(cups, moves);
+fn count_1_based_label_after(cups: &[usize], moves: usize) -> String {
+    let mut buffer = build_cups_buffer(&cups, cups.len());
+    simulate_game(cups[0], &mut buffer, moves);
 
-    find_1_based_label(&new_cups)
+    find_1_based_label(&buffer)
 }
 
-fn count_product_of_two_labels_after_1(cups: &[u32]) -> u64 {
-    let mut all_cups = vec![0; 1_000_000];
+fn count_product_of_two_labels_after_1(cups: &[usize]) -> usize {
+    let mut buffer = build_cups_buffer(&cups, 1_000_000);
+    simulate_game(cups[0], &mut buffer, 10_000_000);
 
-    for (i, &cup) in cups.iter().enumerate() {
-        all_cups[i] = cup;
-    }
-
-    for (i, val) in all_cups
-        .iter_mut()
-        .enumerate()
-        .take(1_000_000)
-        .skip(cups.len())
-    {
-        *val = (i + 1) as u32;
-    }
-
-    let new_cups = simulate_game(&all_cups, 10_000_000);
-    let one_idx = new_cups.iter().position(|&v| v == 1).unwrap();
-
-    (new_cups[(one_idx + 1) % new_cups.len()] as u64)
-        * (new_cups[(one_idx + 2) % new_cups.len()] as u64)
+    buffer[1] * buffer[buffer[1]]
 }
 
 pub struct Day23 {}
@@ -158,8 +100,9 @@ mod tests {
     fn test_test_1_based_label() {
         let test_cups_text = "389125467";
         let test_cups = parse_cups(test_cups_text);
+        let test_buffer = build_cups_buffer(&test_cups, test_cups.len());
 
-        assert_eq!(find_1_based_label(&test_cups), "25467389");
+        assert_eq!(find_1_based_label(&test_buffer), "25467389");
     }
 
     #[test]
@@ -168,7 +111,10 @@ mod tests {
         let test_cups = parse_cups(test_cups_text);
 
         for (moves, label) in &[(1, "54673289"), (2, "32546789"), (3, "34672589")] {
-            assert_eq!(count_1_based_label_after(&test_cups, *moves as u32), *label);
+            assert_eq!(
+                count_1_based_label_after(&test_cups, *moves as usize),
+                *label
+            );
         }
     }
 
@@ -188,7 +134,7 @@ mod tests {
 
         assert_eq!(
             count_product_of_two_labels_after_1(&test_cups),
-            149245887792_u64
+            149245887792
         );
     }
 }
