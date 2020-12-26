@@ -37,14 +37,14 @@ impl TrieNode {
         }
     }
 
-    fn add_value_at(&mut self, address: &str, value: i64, position: usize) {
-        if position >= address.chars().count() {
+    fn add_value_at(&mut self, address: &str, value: i64) {
+        if address.is_empty() {
             self.value = value;
             return;
         }
 
-        match address.chars().nth(position).unwrap() {
-            '1' => {
+        match &address[..1] {
+            "1" => {
                 if self.right.is_none() {
                     self.right = Some(Box::new(TrieNode::new()));
                 }
@@ -52,9 +52,9 @@ impl TrieNode {
                 self.right
                     .as_mut()
                     .unwrap()
-                    .add_value_at(address, value, position + 1);
+                    .add_value_at(&address[1..], value);
             }
-            '0' => {
+            "0" => {
                 if self.left.is_none() {
                     self.left = Some(Box::new(TrieNode::new()));
                 }
@@ -62,9 +62,9 @@ impl TrieNode {
                 self.left
                     .as_mut()
                     .unwrap()
-                    .add_value_at(address, value, position + 1);
+                    .add_value_at(&address[1..], value);
             }
-            'X' => {
+            "X" => {
                 if self.left.is_none() {
                     self.left = Some(Box::new(TrieNode::new()));
                 }
@@ -75,11 +75,11 @@ impl TrieNode {
                 self.left
                     .as_mut()
                     .unwrap()
-                    .add_value_at(address, value, position + 1);
+                    .add_value_at(&address[1..], value);
                 self.right
                     .as_mut()
                     .unwrap()
-                    .add_value_at(address, value, position + 1);
+                    .add_value_at(&address[1..], value);
             }
             _ => (),
         };
@@ -153,7 +153,7 @@ fn evaluate_program_v2(program: &[Command]) -> i64 {
                 let addr = addr.parse::<i64>().unwrap();
                 let address = apply_mask(&mask, &format!("{:0>36b}", addr));
 
-                memory.add_value_at(&address, *value, 0);
+                memory.add_value_at(&address, *value);
             }
         }
     }

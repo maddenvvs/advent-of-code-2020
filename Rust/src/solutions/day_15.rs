@@ -1,12 +1,11 @@
 use super::solution::{Error as ChallengeErr, Solution};
-use std::collections::HashMap;
 use std::str::FromStr;
 
 struct NumbersGame {
-    numbers: Vec<i32>,
-    seen: HashMap<i32, i32>,
-    last_move: i32,
-    last_number: i32,
+    numbers: Vec<usize>,
+    seen: Vec<usize>,
+    last_move: usize,
+    last_number: usize,
 }
 
 impl FromStr for NumbersGame {
@@ -15,7 +14,7 @@ impl FromStr for NumbersGame {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(NumbersGame {
             numbers: s.split(',').map(|el| el.parse().unwrap()).collect(),
-            seen: HashMap::new(),
+            seen: vec![0; 30_000_001],
             last_move: 0,
             last_number: 0,
         })
@@ -23,7 +22,7 @@ impl FromStr for NumbersGame {
 }
 
 struct GameState {
-    number: i32,
+    number: usize,
 }
 
 impl Iterator for NumbersGame {
@@ -39,15 +38,16 @@ impl Iterator for NumbersGame {
             number: self.last_number,
         };
 
-        if (self.last_move as usize) < self.numbers.len() {
-            self.seen.insert(self.last_number, self.last_move);
-            self.last_number = self.numbers[self.last_move as usize];
+        if self.last_move < self.numbers.len() {
+            self.seen[self.last_number] = self.last_move;
+            self.last_number = self.numbers[self.last_move];
         } else {
-            let last_seen_at = match self.seen.get(&self.last_number) {
-                Some(last_seen_at) => self.last_move - last_seen_at,
-                None => 0,
+            let last_seen_at = if self.seen[self.last_number] == 0 {
+                0
+            } else {
+                self.last_move - self.seen[self.last_number]
             };
-            self.seen.insert(self.last_number, self.last_move);
+            self.seen[self.last_number] = self.last_move;
             self.last_number = last_seen_at;
         }
 
@@ -58,8 +58,8 @@ impl Iterator for NumbersGame {
 }
 
 impl NumbersGame {
-    fn find_number_at_move(&mut self, at_move: i32) -> i32 {
-        self.nth((at_move - 1) as usize).unwrap().number
+    fn find_number_at_move(&mut self, at_move: usize) -> usize {
+        self.nth(at_move - 1).unwrap().number
     }
 }
 

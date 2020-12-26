@@ -17,7 +17,7 @@ impl Token {
     }
 }
 
-fn parse_expression(expression: &str) -> Vec<Token> {
+fn tokenize(expression: &str) -> Vec<Token> {
     use Token::*;
 
     expression
@@ -34,8 +34,8 @@ fn parse_expression(expression: &str) -> Vec<Token> {
         .collect()
 }
 
-fn parse_expressions(expressions_text: &str) -> Vec<Vec<Token>> {
-    expressions_text.lines().map(parse_expression).collect()
+fn tokenize_expressions(expressions_text: &str) -> Vec<Vec<Token>> {
+    expressions_text.lines().map(tokenize).collect()
 }
 
 fn eval_op(l: &Token, op: &Token, r: &Token) -> Token {
@@ -86,7 +86,10 @@ fn evaluate_expression(expression: &[Token]) -> Result<u64, &str> {
     Err("Incorrect expression")
 }
 
-fn try_swallow_advanced(stack: &mut Vec<Token>, predicate: &dyn Fn(&Token) -> bool) {
+fn try_swallow_advanced<T>(stack: &mut Vec<Token>, predicate: T)
+where
+    T: Fn(&Token) -> bool,
+{
     while stack.len() > 1 && predicate(&stack[stack.len() - 2]) {
         let s = stack.pop().unwrap();
         let op = stack.pop().unwrap();
@@ -97,7 +100,7 @@ fn try_swallow_advanced(stack: &mut Vec<Token>, predicate: &dyn Fn(&Token) -> bo
 }
 
 fn simplify(stack: &mut Vec<Token>) {
-    try_swallow_advanced(stack, &|t: &Token| t.is_operation())
+    try_swallow_advanced(stack, |t: &Token| t.is_operation())
 }
 
 fn evaluate_expression_advanced(expression: &[Token]) -> Result<u64, &str> {
@@ -117,7 +120,7 @@ fn evaluate_expression_advanced(expression: &[Token]) -> Result<u64, &str> {
             }
             &n @ Number(_) => stack.push(n),
             Plus => {
-                try_swallow_advanced(&mut stack, &|t| matches!(t, Plus));
+                try_swallow_advanced(&mut stack, |t| matches!(t, Plus));
                 stack.push(Plus);
             }
             Multiply => {
@@ -154,13 +157,13 @@ pub struct Day18 {}
 
 impl Solution for Day18 {
     fn first_task(&self, expressions_text: &str) -> Result<String, Error> {
-        let expressions = parse_expressions(expressions_text);
+        let expressions = tokenize_expressions(expressions_text);
 
         Ok(sum_of_expressions(&expressions).to_string())
     }
 
     fn second_task(&self, expressions_text: &str) -> Result<String, Error> {
-        let expressions = parse_expressions(expressions_text);
+        let expressions = tokenize_expressions(expressions_text);
 
         Ok(sum_of_expressions_advanced(&expressions).to_string())
     }
@@ -182,7 +185,7 @@ mod tests {
         ];
 
         for (expr, result) in &test_expressions {
-            let expr = parse_expression(expr);
+            let expr = tokenize(expr);
             assert_eq!(evaluate_expression(&expr), Ok(*result));
         }
     }
@@ -199,7 +202,7 @@ mod tests {
         ];
 
         for (expr, result) in &test_expressions {
-            let expr = parse_expression(expr);
+            let expr = tokenize(expr);
             assert_eq!(evaluate_expression_advanced(&expr), Ok(*result));
         }
     }

@@ -1,4 +1,5 @@
 use super::solution::{Error, Solution};
+use itertools::Itertools;
 use std::str::FromStr;
 
 type Ticket = Vec<i32>;
@@ -18,9 +19,10 @@ impl FromStr for Rule {
 
         let intervals: Vec<(i32, i32)> = intevals_text
             .map(|el| {
-                let mut parts = el.split('-').map(|el| el.parse::<i32>().unwrap());
-
-                (parts.next().unwrap(), parts.next().unwrap())
+                el.split('-')
+                    .map(|el| el.parse::<i32>().unwrap())
+                    .collect_tuple()
+                    .unwrap()
             })
             .collect();
 
@@ -190,10 +192,10 @@ impl FromStr for Notes {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut parts = s.split("\n\n");
-        let rules = Notes::parse_rules(parts.next().unwrap());
-        let my_ticket = Notes::parse_my_ticket(parts.next().unwrap());
-        let nearby_tickets = Notes::parse_nearby_tickets(parts.next().unwrap());
+        let (rules, my_ticket, nearby_tickets) = s.split("\n\n").collect_tuple().unwrap();
+        let rules = Notes::parse_rules(rules);
+        let my_ticket = Notes::parse_my_ticket(my_ticket);
+        let nearby_tickets = Notes::parse_nearby_tickets(nearby_tickets);
 
         Ok(Notes {
             rules,

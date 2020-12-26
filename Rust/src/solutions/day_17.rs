@@ -1,14 +1,14 @@
 use super::solution::{Error, Solution};
-use itertools::iproduct;
+use itertools::{iproduct, Itertools};
 use std::collections::{HashMap, HashSet};
 use std::mem;
 
 struct ConwayCube {
     dimensions: usize,
-    state: HashSet<Vec<i32>>,
-    buffer: HashSet<Vec<i32>>,
-    neighbours: HashMap<Vec<i32>, i32>,
-    neighbours_buffer: HashMap<Vec<i32>, i32>,
+    state: HashSet<Vec<i8>>,
+    buffer: HashSet<Vec<i8>>,
+    neighbours: HashMap<Vec<i8>, i8>,
+    neighbours_buffer: HashMap<Vec<i8>, i8>,
 }
 
 impl ConwayCube {
@@ -25,8 +25,8 @@ impl ConwayCube {
             for (x, v) in line.chars().enumerate() {
                 if v == '#' {
                     let mut point = vec![0; dimensions];
-                    point[0] = x as i32;
-                    point[1] = y as i32;
+                    point[0] = x as i8;
+                    point[1] = y as i8;
 
                     add_point(
                         &mut cube.state,
@@ -73,10 +73,10 @@ impl ConwayCube {
 }
 
 fn add_point(
-    state: &mut HashSet<Vec<i32>>,
-    neighbours: &mut HashMap<Vec<i32>, i32>,
+    state: &mut HashSet<Vec<i8>>,
+    neighbours: &mut HashMap<Vec<i8>, i8>,
     dimensions: usize,
-    point: &[i32],
+    point: &[i8],
 ) {
     state.insert(point.to_vec());
 
@@ -85,30 +85,26 @@ fn add_point(
     }
 }
 
-fn neighbour_cubes(point: &[i32], dimensions: usize) -> Vec<Vec<i32>> {
-    let mut neighbours = vec![];
-
+fn neighbour_cubes(point: &[i8], dimensions: usize) -> Box<dyn Iterator<Item = Vec<i8>>> {
     match dimensions {
         3 => {
-            for (x, y, z) in iproduct!((-1..=1), (-1..=1), (-1..=1)) {
-                if x == 0 && y == 0 && z == 0 {
-                    continue;
-                }
-                neighbours.push(vec![point[0] + x, point[1] + y, point[2] + z]);
-            }
+            let (&px, &py, &pz) = point.iter().collect_tuple().unwrap();
+            Box::new(
+                iproduct!((-1..=1), (-1..=1), (-1..=1))
+                    .filter(|&p| p != (0, 0, 0))
+                    .map(move |(x, y, z)| vec![px + x, py + y, pz + z]),
+            )
         }
         4 => {
-            for (x, y, z, w) in iproduct!((-1..=1), (-1..=1), (-1..=1), (-1..=1)) {
-                if x == 0 && y == 0 && z == 0 && w == 0 {
-                    continue;
-                }
-                neighbours.push(vec![point[0] + x, point[1] + y, point[2] + z, point[3] + w]);
-            }
+            let (&px, &py, &pz, &pw) = point.iter().collect_tuple().unwrap();
+            Box::new(
+                iproduct!((-1..=1), (-1..=1), (-1..=1), (-1..=1))
+                    .filter(|&p| p != (0, 0, 0, 0))
+                    .map(move |(x, y, z, w)| vec![px + x, py + y, pz + z, pw + w]),
+            )
         }
         _ => panic!("Unsupported dimension: {}", dimensions),
     }
-
-    neighbours
 }
 
 pub struct Day17 {}
