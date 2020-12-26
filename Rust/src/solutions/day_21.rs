@@ -1,5 +1,7 @@
 use super::solution::{Error, Solution};
+use std::cmp::Eq;
 use std::collections::{HashMap, HashSet};
+use std::hash::Hash;
 
 struct Food<'a> {
     ingredients: Vec<&'a str>,
@@ -19,29 +21,31 @@ impl Food<'_> {
     }
 }
 
-struct Graph {
-    g: HashMap<String, Vec<String>>,
+struct Graph<'a, T>
+where
+    T: Eq + Hash,
+{
+    g: HashMap<&'a T, Vec<&'a T>>,
 }
 
-impl Graph {
-    fn new() -> Graph {
+impl<'a, T> Graph<'a, T>
+where
+    T: Eq + Hash,
+{
+    fn new() -> Graph<'a, T> {
         Graph { g: HashMap::new() }
     }
 
-    fn add_edge(&mut self, u: &str, v: &str) {
-        self.g
-            .entry(u.to_string())
-            .or_insert(Vec::new())
-            .push(v.to_string());
-        self.g
-            .entry(v.to_string())
-            .or_insert(Vec::new())
-            .push(u.to_string());
+    fn add_edge(&'a mut self, u: &'a T, v: &'a T) -> &mut Graph<'a, T> {
+        self.g.entry(u).or_insert_with(Vec::new).push(v);
+        self.g.entry(v).or_insert_with(Vec::new).push(u);
+
+        self
     }
 
-    fn find_matching_using_kuhn_algorithm(&self) -> HashMap<String, String> {
-        let mut matching: HashMap<&String, &String> = HashMap::new();
-        let mut visited: HashSet<&String> = HashSet::new();
+    fn find_matching_using_kuhn_algorithm(&self) -> HashMap<&T, &T> {
+        let mut matching: HashMap<&T, &T> = HashMap::new();
+        let mut visited: HashSet<&T> = HashSet::new();
         let mut has_augmented = true;
 
         while has_augmented {
@@ -55,17 +59,14 @@ impl Graph {
             }
         }
 
-        matching
-            .iter()
-            .map(|(&l, &r)| (l.to_string(), r.to_string()))
-            .collect()
+        matching.iter().map(|(&l, &r)| (l, r)).collect()
     }
 
-    fn dfs<'a>(
+    fn dfs(
         &'a self,
-        u: &'a String,
-        visited: &mut HashSet<&'a String>,
-        matching: &mut HashMap<&'a String, &'a String>,
+        u: &'a T,
+        visited: &mut HashSet<&'a T>,
+        matching: &mut HashMap<&'a T, &'a T>,
     ) -> bool {
         if visited.contains(u) {
             return false;
@@ -90,12 +91,6 @@ fn parse_food_list(foods_text: &str) -> Vec<Food> {
 }
 
 fn find_allergen_candidates<'a>(food_list: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
-    let all_ingredients: HashSet<&str> = food_list
-        .iter()
-        .flat_map(|f| &f.ingredients)
-        .copied()
-        .collect();
-
     let mut allergen_candidates: HashMap<&str, HashSet<&str>> = HashMap::new();
     for food in food_list.iter() {
         let food_ingredients: HashSet<&str> = food.ingredients.iter().copied().collect();
@@ -106,10 +101,7 @@ fn find_allergen_candidates<'a>(food_list: &[Food<'a>]) -> HashMap<&'a str, Hash
                 .or_insert_with(HashSet::new);
 
             if val.is_empty() {
-                *val = all_ingredients
-                    .intersection(&food_ingredients)
-                    .copied()
-                    .collect();
+                *val = food_ingredients.iter().copied().collect();
             } else {
                 *val = val.intersection(&food_ingredients).copied().collect();
             }
@@ -134,20 +126,20 @@ fn count_allergen_free_ingredients(food_list: &[Food]) -> usize {
 fn find_allergen_list(food_list: &[Food]) -> String {
     let allergen_candidates = find_allergen_candidates(food_list);
     let mut graph = Graph::new();
+    let matching = allergen_candidates
+        .iter()
+        .flat_map(|(allergen, candidates)| candidates.iter().map(move |c| (allergen, c)))
+        .fold(&mut graph, |g, (allergen, candidate)| {
+            g.add_edge(allergen, candidate)
+        })
+        .find_matching_using_kuhn_algorithm();
 
-    for (allergen, candidates) in &allergen_candidates {
-        for candidate in candidates {
-            graph.add_edge(allergen, candidate)
-        }
-    }
-
-    let matching = graph.find_matching_using_kuhn_algorithm();
     let mut foreign_allergens: Vec<&str> = allergen_candidates.keys().copied().collect();
     foreign_allergens.sort_unstable();
 
     foreign_allergens
         .iter()
-        .map(|&el| matching.get(el).unwrap().as_str())
+        .map(|el| **matching.get(el).unwrap())
         .collect::<Vec<&str>>()
         .join(",")
 }
