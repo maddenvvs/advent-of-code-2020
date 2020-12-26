@@ -28,6 +28,13 @@ Run solution for a day 17 (`release` profile):
 $ cargo run --release -- 17 ../input/day-17.input
 ```
 
+Run benchmark tests:
+```sh
+$ cargo bench
+```
+
 ## TODO
-- [ ] Add benchmarks
-- [ ] Try `RUSTFLAGS='-Ctarget-cpu=native -Copt-level=3' cargo run --release` to test performance difference
+- [x] Add benchmarks
+    Use [Criterion](https://github.com/bheisler/criterion.rs) to measure performance.
+- [x] Try `RUSTFLAGS='-C target-cpu=native' cargo run --release` to test performance difference
+    Didn't find any significant difference in performance.
