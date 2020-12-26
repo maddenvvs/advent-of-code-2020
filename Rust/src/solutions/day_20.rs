@@ -9,11 +9,8 @@ type Grid<T> = Vec<Vec<T>>;
 type ArrangementGraph<'a> = HashMap<&'a Tile, HashMap<&'a Tile, Vec<Border>>>;
 type Border2Tiles<'a> = HashMap<Border, HashSet<&'a Tile>>;
 
-fn border_value(border: &[char]) -> usize {
-    border
-        .iter()
-        .rev()
-        .fold(0, |acc, &el| 2 * acc + if el == '#' { 1 } else { 0 })
+fn border_value(border_iter: impl Iterator<Item = char>) -> usize {
+    border_iter.fold(0, |acc, el| 2 * acc + if el == '#' { 1 } else { 0 })
 }
 
 struct Image {
@@ -42,18 +39,10 @@ impl Image {
 
     fn borders(&self) -> Borders {
         [
-            border_value(&self.image[0]),
-            border_value(
-                &(0..self.size())
-                    .map(|r| self.image[r][self.size() - 1])
-                    .collect::<Vec<_>>(),
-            ),
-            border_value(&self.image[self.size() - 1]),
-            border_value(
-                &(0..self.size())
-                    .map(|r| self.image[r][0])
-                    .collect::<Vec<_>>(),
-            ),
+            border_value(self.image[0].iter().copied()),
+            border_value(self.image.iter().map(|row| row[self.size() - 1])),
+            border_value(self.image[self.size() - 1].iter().copied()),
+            border_value(self.image.iter().map(|row| row[0])),
         ]
     }
 
@@ -106,7 +95,7 @@ impl Image {
     }
 
     fn possible_images(&self) -> Vec<Image> {
-        let mut images = Vec::new();
+        let mut images = Vec::with_capacity(16);
 
         for base_image in &[
             self.clone(),
@@ -222,14 +211,14 @@ fn recover_tile_graph<'a>(border2tiles: &'a Border2Tiles) -> ArrangementGraph<'a
             .entry(*first)
             .or_insert_with(HashMap::new)
             .entry(*second)
-            .or_insert(vec![]);
+            .or_insert_with(Vec::new);
         first_entry.push(*side);
 
         let second_entry = graph
             .entry(*second)
             .or_insert_with(HashMap::new)
             .entry(*first)
-            .or_insert(vec![]);
+            .or_insert_with(Vec::new);
         second_entry.push(*side);
     }
 
@@ -538,17 +527,14 @@ mod tests {
     fn test_border_function() {
         let test_borders = [
             ("#", 1),
-            ("#.", 1),
-            (".#", 2),
+            ("#.", 2),
+            (".#", 1),
             ("#.#", 5),
-            ("..##.#...", 44),
+            ("..##.#...", 104),
         ];
 
         for (border, number) in test_borders.iter() {
-            assert_eq!(
-                border_value(&border.chars().collect::<Vec<_>>()),
-                *number as usize
-            );
+            assert_eq!(border_value(border.chars()), *number as usize);
         }
     }
 
@@ -560,7 +546,7 @@ mod tests {
 ####.
 ##.##";
 
-        assert_eq!(Image::from_str(test_image).borders(), [12, 22, 27, 30]);
+        assert_eq!(Image::from_str(test_image).borders(), [6, 13, 27, 15]);
     }
 
     #[test]
@@ -573,7 +559,7 @@ mod tests {
 
         assert_eq!(
             Image::from_str(test_image).flip_horizontally().borders(),
-            [27, 13, 12, 15]
+            [27, 22, 6, 30]
         );
     }
 
@@ -587,7 +573,7 @@ mod tests {
 
         assert_eq!(
             Image::from_str(test_image).flip_vertically().borders(),
-            [6, 30, 27, 22]
+            [12, 15, 27, 13]
         );
     }
 
