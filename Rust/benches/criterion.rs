@@ -13,6 +13,116 @@ pub fn day01(c: &mut Criterion) {
     });
 }
 
+pub fn day02(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-02.input").unwrap();
+    let day = Day02 {};
+    c.bench_function("Day 02 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 02 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day03(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-03.input").unwrap();
+    let day = Day03 {};
+    c.bench_function("Day 03 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 03 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day04(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-04.input").unwrap();
+    let day = Day04 {};
+    c.bench_function("Day 04 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 04 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day05(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-05.input").unwrap();
+    let day = Day05 {};
+    c.bench_function("Day 05 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 05 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day06(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-06.input").unwrap();
+    let day = Day06 {};
+    c.bench_function("Day 06 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 06 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day07(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-07.input").unwrap();
+    let day = Day07 {};
+    c.bench_function("Day 07 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 07 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day08(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-08.input").unwrap();
+    let day = Day08 {};
+    c.bench_function("Day 08 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 08 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day09(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-09.input").unwrap();
+    let day = Day09 {};
+    c.bench_function("Day 09 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 09 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day10(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-10.input").unwrap();
+    let day = Day10 {};
+    c.bench_function("Day 10 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 10 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
+pub fn day11(c: &mut Criterion) {
+    let input = fs::read_to_string("../input/day-11.input").unwrap();
+    let day = Day11 {};
+    c.bench_function("Day 11 first task", |b| {
+        b.iter(|| day.first_task(black_box(&input)))
+    });
+    c.bench_function("Day 11 second task", |b| {
+        b.iter(|| day.second_task(black_box(&input)))
+    });
+}
+
 pub fn day12(c: &mut Criterion) {
     let input = fs::read_to_string("../input/day-12.input").unwrap();
     let day = Day12 {};
@@ -169,8 +279,18 @@ pub fn day25(c: &mut Criterion) {
 
 criterion_group!(
     benches,
-    // day01,
-    day12,
+    day01,
+    // day02,
+    // day03,
+    // day04,
+    // day05,
+    // day06,
+    // day07,
+    // day08,
+    // day09,
+    // day10,
+    // day11,
+    // day12,
     // day13,
     // day14,
     // day15,

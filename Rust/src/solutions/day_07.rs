@@ -19,7 +19,7 @@ impl BagsRules {
                 reversed_graph
                     .graph
                     .entry(v.to_string())
-                    .or_insert(vec![])
+                    .or_insert_with(Vec::new)
                     .push((u.to_string(), *c));
             }
         }

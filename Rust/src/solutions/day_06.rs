@@ -26,14 +26,9 @@ fn sum_of_common_answers(group: &Group) -> i32 {
     group
         .iter()
         .fold(unique_answers, |acc, el| {
-            let mut result: HashSet<char> = HashSet::new();
-            let chars_set: HashSet<char> = el.chars().collect::<HashSet<char>>();
-
-            for el in acc.intersection(&chars_set) {
-                result.insert(*el);
-            }
-
-            result
+            acc.intersection(&el.chars().collect::<HashSet<char>>())
+                .copied()
+                .collect()
         })
         .len() as i32
 }

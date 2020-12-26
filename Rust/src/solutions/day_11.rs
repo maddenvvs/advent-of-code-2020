@@ -1,7 +1,7 @@
 use super::solution::{Error as ChallengeErr, Solution};
 use core::fmt;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Copy, PartialEq)]
 enum Cell {
     Empty,
     Free,
@@ -70,55 +70,48 @@ impl WaitingArea {
         let lines: Vec<&str> = s.lines().collect();
         let height = lines.len();
         let width = lines[0].len();
-        let mut area: Vec<Vec<Cell>> = vec![];
-
-        for line in lines.iter() {
-            area.push(line.chars().map(&Cell::from_char).collect());
-        }
 
         WaitingArea {
             width,
             height,
-            area,
+            area: lines
+                .iter()
+                .map(|line| line.chars().map(&Cell::from_char).collect())
+                .collect(),
             buffer: vec![vec![Cell::Empty; width]; height],
         }
     }
 
-    fn adjacent_neighbors(&self, r: usize, c: usize) -> Vec<&Cell> {
-        let mut adjacent_cells = vec![];
-
-        for (dr, dc) in ADJACENT_DIRECTIONS.iter() {
-            let (nr, nc) = (r as i8 + dr, c as i8 + dc);
-            if 0 <= nr
-                && nr < self.height as i8
-                && 0 <= nc
-                && nc < self.width as i8
-                && self.area[nr as usize][nc as usize] != Cell::Empty
-            {
-                adjacent_cells.push(&self.area[nr as usize][nc as usize]);
-            }
-        }
-
-        adjacent_cells
+    fn is_in_area(&self, r: i8, c: i8) -> bool {
+        0 <= r && r < self.height as i8 && 0 <= c && c < self.width as i8
     }
 
-    fn visible_seats_from(&self, r: usize, c: usize) -> Vec<&Cell> {
-        let mut adjacent_cells = vec![];
+    fn adjacent_neighbors(&self, r: usize, c: usize) -> impl Iterator<Item = Cell> + '_ {
+        ADJACENT_DIRECTIONS
+            .iter()
+            .map(move |(dr, dc)| (r as i8 + *dr, c as i8 + *dc))
+            .filter(move |(nr, nc)| self.is_in_area(*nr, *nc))
+            .map(move |(nr, nc)| self.area[nr as usize][nc as usize])
+            .filter(|&cell| !matches!(cell, Cell::Empty))
+    }
 
-        for (dr, dc) in ADJACENT_DIRECTIONS.iter() {
-            let (mut nr, mut nc) = (r as i8 + dr, c as i8 + dc);
-            while 0 <= nr && nr < self.height as i8 && 0 <= nc && nc < self.width as i8 {
-                if self.area[nr as usize][nc as usize] != Cell::Empty {
-                    adjacent_cells.push(&self.area[nr as usize][nc as usize]);
-                    break;
+    fn visible_seats_from(&self, r: usize, c: usize) -> impl Iterator<Item = Cell> + '_ {
+        ADJACENT_DIRECTIONS
+            .iter()
+            .map(move |(dr, dc)| {
+                let (mut nr, mut nc) = (r as i8 + dr, c as i8 + dc);
+                while 0 <= nr && nr < self.height as i8 && 0 <= nc && nc < self.width as i8 {
+                    if self.area[nr as usize][nc as usize] != Cell::Empty {
+                        return self.area[nr as usize][nc as usize];
+                    }
+
+                    nr += dr;
+                    nc += dc;
                 }
 
-                nr += dr;
-                nc += dc;
-            }
-        }
-
-        adjacent_cells
+                Cell::Empty
+            })
+            .filter(|&cell| !matches!(cell, Cell::Empty))
     }
 
     fn simulate_intolerant_step(&mut self) -> (bool, i32) {
@@ -131,7 +124,6 @@ impl WaitingArea {
                     Cell::Free => {
                         if self
                             .adjacent_neighbors(r, c)
-                            .iter()
                             .filter(|c| matches!(c, Cell::Occupied))
                             .count()
                             == 0
@@ -144,7 +136,6 @@ impl WaitingArea {
                     Cell::Occupied => {
                         if self
                             .adjacent_neighbors(r, c)
-                            .iter()
                             .filter(|c| matches!(c, Cell::Occupied))
                             .count()
                             >= 4
@@ -180,7 +171,6 @@ impl WaitingArea {
                     Cell::Free => {
                         if self
                             .visible_seats_from(r, c)
-                            .iter()
                             .filter(|c| matches!(c, Cell::Occupied))
                             .count()
                             == 0
@@ -193,7 +183,6 @@ impl WaitingArea {
                     Cell::Occupied => {
                         if self
                             .visible_seats_from(r, c)
-                            .iter()
                             .filter(|c| matches!(c, Cell::Occupied))
                             .count()
                             >= 5
