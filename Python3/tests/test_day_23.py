@@ -1,26 +1,17 @@
 from aoc2020.solutions.day_23 import parse_cups, \
+    build_cups_buffer, \
     count_1_based_label_after, \
     find_1_based_label, \
-    DoublyLinkedList, \
     count_product_of_two_labels_after_1
-
-
-def test_linked_list_adding():
-    linked_list = DoublyLinkedList()
-    nums = [7, 56, 23, 18, 44, 18]
-
-    for num in nums:
-        linked_list.add(num)
-
-    assert list(linked_list) == nums
 
 
 def test_1_based_label():
     test_cups_text = "389125467"
 
     test_cups = parse_cups(test_cups_text)
+    test_buffer = build_cups_buffer(test_cups, len(test_cups))
 
-    assert find_1_based_label(test_cups) == "25467389"
+    assert find_1_based_label(test_buffer) == "25467389"
 
 
 def test_some_next_moves():

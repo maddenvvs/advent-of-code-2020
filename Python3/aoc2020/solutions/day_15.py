@@ -8,8 +8,8 @@ def parse_numbers(numbers_text: str) -> List[int]:
     return [int(i, base=10) for i in numbers_text.split(",")]
 
 
-def numbers_game(numbers: Sequence[int]) -> Generator[Tuple[int, int], None, None]:
-    seen = {}
+def numbers_game(numbers: Sequence[int], move: int) -> Generator[Tuple[int, int], None, None]:
+    seen = [0] * (move + 1)
     last_move, last_number = 1, numbers[0]
 
     for i in range(1, len(numbers)):
@@ -20,7 +20,7 @@ def numbers_game(numbers: Sequence[int]) -> Generator[Tuple[int, int], None, Non
     while True:
         yield last_move, last_number
 
-        last_seen_at = seen.get(last_number, 0)
+        last_seen_at = seen[last_number]
         seen[last_number] = last_move
         last_number = (last_move - last_seen_at) if last_seen_at else 0
 
@@ -28,7 +28,7 @@ def numbers_game(numbers: Sequence[int]) -> Generator[Tuple[int, int], None, Non
 
 
 def find_number_at_move(numbers: Sequence[int], move: int) -> int:
-    return next(dropwhile(lambda t: t[0] < move, numbers_game(numbers)))[1]
+    return next(dropwhile(lambda t: t[0] < move, numbers_game(numbers, move)))[1]
 
 
 def find_2020th_number(numbers: Sequence[int]) -> int:

@@ -1,4 +1,4 @@
-from aoc2020.solutions.day_11 import WaitingArea, Cell
+from aoc2020.solutions.day_11 import WaitingArea
 
 
 def test_first_task():
@@ -78,12 +78,12 @@ def test_visibility():
 .........
 #........
 ...#.....""")
-    assert test_visibility_1.visible_seats_from(4, 3) == [Cell.OCCUPIED] * 8
+    assert list(test_visibility_1.visible_seats_from(4, 3)) == ["#"] * 8
 
     test_visibility_2 = WaitingArea.from_string(""".............
 .L.L.#.#.#.#.
 .............""")
-    assert test_visibility_2.visible_seats_from(1, 1) == [Cell.FREE]
+    assert list(test_visibility_2.visible_seats_from(1, 1)) == ["L"]
 
     test_visibility_3 = WaitingArea.from_string(""".##.##.
 #.#.#.#
@@ -92,7 +92,7 @@ def test_visibility():
 ##...##
 #.#.#.#
 .##.##.""")
-    assert test_visibility_3.visible_seats_from(3, 3) == []
+    assert list(test_visibility_3.visible_seats_from(3, 3)) == []
 
 
 def test_second_task():

@@ -1,8 +1,9 @@
-from typing import List, Tuple, Dict
+from collections import deque
+from typing import Deque, Dict, List, Tuple
 
 from .solution import Solution
 
-Deck = List[int]
+Deck = Deque[int]
 
 
 def parse_decks(cards_text: str) -> Tuple[Deck, Deck]:
@@ -10,13 +11,13 @@ def parse_decks(cards_text: str) -> Tuple[Deck, Deck]:
     player1_deck = player1.splitlines()[1:]
     player2_deck = player2.splitlines()[1:]
 
-    return [int(i, base=10) for i in player1_deck], [int(i, base=10) for i in player2_deck]
+    return deque(int(i, base=10) for i in player1_deck), deque(int(i, base=10) for i in player2_deck)
 
 
 def simulate_combat_game(first_deck: Deck, second_deck: Deck) -> Tuple[Deck, Deck]:
     while first_deck and second_deck:
-        f = first_deck.pop(0)
-        s = second_deck.pop(0)
+        f = first_deck.popleft()
+        s = second_deck.popleft()
 
         if f > s:
             first_deck.append(f)
@@ -28,20 +29,14 @@ def simulate_combat_game(first_deck: Deck, second_deck: Deck) -> Tuple[Deck, Dec
     return first_deck, second_deck
 
 
-def generate_cache_key(d1: Deck, d2: Deck) -> str:
-    return f'{",".join(map(str,d1))}|{",".join(map(str,d2))}'
+def generate_cache_key(d1: Deck, d2: Deck) -> int:
+    return hash((tuple(d1), tuple(d2)))
 
 
 def simulate_recursive_combat_game(
         first_deck: Deck,
         second_deck: Deck,
-        game_cache: Dict[str, bool]
 ) -> Tuple[bool, Deck, Deck]:
-    cache_key = generate_cache_key(first_deck, second_deck)
-
-    if cache_key in game_cache:
-        return game_cache[cache_key], first_deck, second_deck
-
     round_cache = set()
     while first_deck and second_deck:
         round_cache_key = generate_cache_key(first_deck, second_deck)
@@ -50,14 +45,14 @@ def simulate_recursive_combat_game(
 
         round_cache.add(round_cache_key)
 
-        f = first_deck.pop(0)
-        s = second_deck.pop(0)
+        f = first_deck.popleft()
+        s = second_deck.popleft()
 
         res = f > s
 
         if f <= len(first_deck) and s <= len(second_deck):
             res, _, _ = simulate_recursive_combat_game(
-                first_deck[:f], second_deck[:s], game_cache)
+                deque(list(first_deck)[:f]), deque(list(second_deck)[:s]))
 
         if res:
             first_deck.append(f)
@@ -67,7 +62,6 @@ def simulate_recursive_combat_game(
             second_deck.append(f)
 
     game_result = bool(first_deck)
-    game_cache[cache_key] = game_result
 
     return game_result, first_deck, second_deck
 
@@ -84,7 +78,7 @@ def find_winning_score_in_combat(player1_deck: Deck, player2_deck: Deck) -> int:
 
 def find_winning_score_in_recursive_combat(player1_deck: Deck, player2_deck: Deck) -> int:
     res, p1_deck, p2_deck = simulate_recursive_combat_game(
-        player1_deck, player2_deck, {})
+        player1_deck, player2_deck)
 
     return count_deck_score(p1_deck) if res else count_deck_score(p2_deck)
 
